@@ -24,12 +24,47 @@ task("accounts", "Prints the list of accounts", async (args, hre) => {
  */
 const config: HardhatUserConfig = {
   react: {
-    providerPriority: ["web3modal", "hardhat"],
+    providerPriority: ["hardhat", "web3modal"],
+    handle: ["ERC1400"],
+  },
+  networks: {
+    brregProd: {
+      url:
+        "https://u1qdua80h5:Er0LWdZuKqOza22YNQKhtdFCbqRzhzGCRhuZgrtHZ9s@u1txh1ent0-u1ieecy018-rpc.us1-azure.kaleido.io",
+
+      gasPrice: 0,
+      inject: true,
+      user: "u1qdua80h5",
+      password: "Er0LWdZuKqOza22YNQKhtdFCbqRzhzGCRhuZgrtHZ9s",
+      providerType: "JsonRpcProvider",
+      accounts: {
+        mnemonic:
+          "shrug antique orange tragic direct drop abstract ring carry price anchor train",
+      },
+    },
   },
   solidity: {
     compilers: [
       {
         version: "0.7.3",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 50,
+          },
+        },
+      },
+      {
+        version: "0.5.0",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 50,
+          },
+        },
+      },
+      {
+        version: "0.5.3",
         settings: {
           optimizer: {
             enabled: true,

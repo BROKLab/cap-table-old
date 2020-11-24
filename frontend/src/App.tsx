@@ -1,31 +1,41 @@
+import { Box, Footer, Grommet, Heading, Main } from "grommet";
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Hardhat } from "./hardhat/HardhatContext";
-import { Greeter } from './components/Greeter';
+
+import { Navigation } from './components/ui/Navigation';
+import { Theme } from "./assets/Theme";
+import { Home } from "./pages/Home";
+
 
 function App() {
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <Hardhat autoInit={true} showLoading={true}>
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-        </a>
-          <Greeter></Greeter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <Grommet theme={Theme}>
+        <Hardhat autoInit={true} showLoading={false}>
+          <Box height={{ min: "100vh" }}>
+            {/* Navigation */}
+            <Navigation></Navigation>
+            {/* Content swtich */}
+            <Main pad="xlarge" height={{ min: "75vh" }} >
+              <Switch>
+                <Route exact path="/">
+                  <Home />
+                </Route>
+              </Switch>
+            </Main>
+            {/* footer */}
+            <Footer background="brand" pad="medium" height={{ min: "10vh" }}>
+              <Box align="center" justify="center" alignContent="center" fill="horizontal" >
+                <Heading level="4">Laget av Brønnøysundregistrene</Heading>
+              </Box>
+            </Footer>
+
+          </Box>
         </Hardhat>
-      </header>
-    </div>
+      </Grommet>
+    </BrowserRouter >
   );
 }
 
