@@ -25,7 +25,7 @@ task("accounts", "Prints the list of accounts", async (args, hre) => {
 const config: HardhatUserConfig = {
   react: {
     providerPriority: ["hardhat", "web3modal"],
-    handle: ["ERC1400"],
+    handle: ["ERC1400", "CapTableQue", "CapTableRegistry"],
   },
   networks: {
     brregProd: {
@@ -71,6 +71,9 @@ const config: HardhatUserConfig = {
             runs: 50,
           },
         },
+      },
+      {
+        version: "0.6.2",
       },
     ],
   },

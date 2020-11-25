@@ -6,6 +6,7 @@ import { Hardhat } from "./hardhat/HardhatContext";
 import { Navigation } from './components/ui/Navigation';
 import { Theme } from "./assets/Theme";
 import { Home } from "./pages/Home";
+import { CapTableCreate } from "./components/CapTable/CapTableCreate";
 
 
 function App() {
@@ -22,6 +23,9 @@ function App() {
               <Switch>
                 <Route exact path="/">
                   <Home />
+                </Route>
+                <Route exact path="/captable/create">
+                  <CapTableCreate />
                 </Route>
               </Switch>
             </Main>

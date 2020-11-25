@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.5.5;
 
 
@@ -5,7 +6,7 @@ contract Controllable {
     address[] internal _controllers;
     mapping(address => bool) internal _isController;
 
-    constructor(address[] memory controllers) public {
+    constructor(address[] memory controllers) {
         _setControllers(controllers);
     }
 

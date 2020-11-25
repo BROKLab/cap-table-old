@@ -1,7 +1,9 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity >=0.5.5;
 
 import "./Controllable.sol";
-import "./ICapTableRegistry.sol";
+import "./CapTableRegistry.sol";
 
 contract CapTableQue is Controllable {
     uint256 internal _quedCount;
@@ -9,7 +11,7 @@ contract CapTableQue is Controllable {
     uint256 internal _declinedCount;
     address[] internal _capTablesQue;
     mapping(address => uint256) internal _capTableStatus; // 0:not used 1:qued 2:approved 3:declined
-    ICapTableRegistry internal _CAP_TABLE_REGISTRY;
+    CapTableRegistry internal _CAP_TABLE_REGISTRY;
 
     event qued(address indexed capTable);
     event statusUpdate(
@@ -19,13 +21,12 @@ contract CapTableQue is Controllable {
     );
 
     constructor(address[] memory controllers)
-        public
         Controllable(controllers)
     {}
 
     function setRegistry(address adr) external {
         require(isController(msg.sender), "msg.sender not controller");
-        _CAP_TABLE_REGISTRY = ICapTableRegistry(adr);
+        _CAP_TABLE_REGISTRY = CapTableRegistry(adr);
     }
 
     function getRegistry() external view returns (address capTableRegistry) {
@@ -47,7 +48,8 @@ contract CapTableQue is Controllable {
     function process(
         address adr,
         bool approved,
-        bytes32 reason
+        bytes32 reason,
+        bytes32 orgNr
     ) external {
         // require(adr != address(0), "No empty address");
         // require(isController(msg.sender), "msg.sender not controller");
@@ -55,7 +57,7 @@ contract CapTableQue is Controllable {
         _quedCount--;
 
         if (approved) {
-            _CAP_TABLE_REGISTRY.add(adr);
+            _CAP_TABLE_REGISTRY.add(adr, orgNr);
             _approvedCount++;
             _capTableStatus[adr] = 2;
         } else {
