@@ -7,6 +7,7 @@ import { Navigation } from './components/ui/Navigation';
 import { Theme } from "./assets/Theme";
 import { Home } from "./pages/Home";
 import { CapTableCreate } from "./components/CapTable/CapTableCreate";
+import { CapTablePage } from "./pages/CapTablePage";
 
 
 function App() {
@@ -14,19 +15,19 @@ function App() {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Grommet theme={Theme}>
-        <Hardhat autoInit={true} showLoading={false}>
+        <Hardhat autoInit={true} showLoading={true}>
           <Box height={{ min: "100vh" }}>
             {/* Navigation */}
             <Navigation></Navigation>
             {/* Content swtich */}
             <Main pad="xlarge" height={{ min: "75vh" }} >
               <Switch>
-                <Route exact path="/">
-                  <Home />
-                </Route>
-                <Route exact path="/captable/create">
-                  <CapTableCreate />
-                </Route>
+                <Route exact path="/" component={Home} />
+
+                <Route exact path="/captable/create" component={CapTableCreate} />
+
+                <Route path="/capTable/:address" component={CapTablePage} />
+
               </Switch>
             </Main>
             {/* footer */}

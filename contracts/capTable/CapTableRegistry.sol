@@ -6,8 +6,8 @@ import "./Controllable.sol";
 contract CapTableRegistry is Controllable {
     address[] internal _capTables;
     mapping(address => bool) internal _active;
-    mapping(address => bytes32) internal _addressToOrgNr;
-    mapping(bytes32 => address) internal _orgNrToAddress;
+    mapping(address => bytes32) internal _addressToUuid;
+    mapping(bytes32 => address) internal _uuidToAddress;
     uint256 internal _activeCapTables;
 
     event capTableAdded(address indexed capTableAddress);
@@ -17,8 +17,8 @@ contract CapTableRegistry is Controllable {
         Controllable(controllers)
     {}
 
-    function add(address adr, bytes32 orgNr) external {
-        _addCapTable(adr, orgNr);
+    function add(address adr, bytes32 uuid) external {
+        _addCapTable(adr, uuid);
     }
 
     function remove(address adr) external {
@@ -29,6 +29,9 @@ contract CapTableRegistry is Controllable {
         return _capTables;
     }
 
+    function info(address adr) external view returns (bytes32 uuid, bool active){
+        return (_addressToUuid[adr],_active[adr]);
+    }
     function listActive()
         external
         view
@@ -46,22 +49,22 @@ contract CapTableRegistry is Controllable {
         return capTableAddressArray;
     }
 
-    function _addCapTable(address adr, bytes32 orgNr) internal {
+    function _addCapTable(address adr, bytes32 uuid) internal {
         require(isController(msg.sender), "msg.sender not controller");
         _capTables.push(adr);
         _active[adr] = true;
-        _addressToOrgNr[adr] = orgNr;
-        _orgNrToAddress[orgNr] = adr;
+        _addressToUuid[adr] = uuid;
+        _uuidToAddress[uuid] = adr;
         _activeCapTables++;
         emit capTableAdded(adr);
     }
 
     function _removeCapTable(address adr) internal {
         require(isController(msg.sender), "msg.sender not controller");
-        bytes32 orgNr = _addressToOrgNr[adr];
+        bytes32 uuid = _addressToUuid[adr];
         _active[adr] = false;
-        _addressToOrgNr[adr] = bytes32(0);
-        _orgNrToAddress[orgNr] = address(0);
+        _addressToUuid[adr] = bytes32(0);
+        _uuidToAddress[uuid] = address(0);
         _activeCapTables--;
         emit capTableRemoved(adr);
     }

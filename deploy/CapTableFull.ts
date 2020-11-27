@@ -16,6 +16,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     "0xC9901c379E672912D86D12Cb8f182cFaf5951940",
     signer.address,
   ];
+  console.log("Controllers => ", CONTROLLERS);
 
   async function erc1820() {
     const code = await hre.ethers.provider.getCode(ERC820_ADDRESS);
@@ -45,10 +46,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [CONTROLLERS],
   });
 
+  const CONTROLLERS_WITH_QUE = [...CONTROLLERS, capTableQueDeploy.address];
+
   const capTableRegistryDeploy = await deploy("CapTableRegistry", {
     from: deployer,
     // gas: 4000000,
-    args: [CONTROLLERS],
+    args: [CONTROLLERS_WITH_QUE],
   });
 
   const capTableQue = await hre.ethers.getContractAt(
@@ -57,6 +60,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   );
   const tx = await capTableQue.setRegistry(capTableRegistryDeploy.address);
   await tx.wait();
+
+  // const capTableRegistry = await hre.ethers.getContractAt(
+  //   "CapTableRegistry",
+  //   capTableRegistryDeploy.address
+  // );
+  // const tx2 = await  capTableRegistry.setCon
   console.log("CapTable que and registry deployed");
 };
 export default func;

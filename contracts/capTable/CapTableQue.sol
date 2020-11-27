@@ -12,6 +12,7 @@ contract CapTableQue is Controllable {
     address[] internal _capTablesQue;
     mapping(address => uint256) internal _capTableStatus; // 0:not used 1:qued 2:approved 3:declined
     CapTableRegistry internal _CAP_TABLE_REGISTRY;
+    mapping(address => bytes32) internal _capTableUuid;
 
     event qued(address indexed capTable);
     event statusUpdate(
@@ -33,7 +34,7 @@ contract CapTableQue is Controllable {
         return address(_CAP_TABLE_REGISTRY);
     }
 
-    function add(address adr) external {
+    function add(address adr, bytes32 uuid) external {
         require(adr != address(0), "No empty address");
         require(
             _capTableStatus[adr] == uint256(0),
@@ -42,14 +43,14 @@ contract CapTableQue is Controllable {
         _capTablesQue.push(adr);
         _quedCount++;
         _capTableStatus[adr] = 1;
+        _capTableUuid[adr] = uuid;
         emit qued(adr);
     }
 
     function process(
         address adr,
         bool approved,
-        bytes32 reason,
-        bytes32 orgNr
+        bytes32 reason
     ) external {
         // require(adr != address(0), "No empty address");
         // require(isController(msg.sender), "msg.sender not controller");
@@ -57,7 +58,7 @@ contract CapTableQue is Controllable {
         _quedCount--;
 
         if (approved) {
-            _CAP_TABLE_REGISTRY.add(adr, orgNr);
+            _CAP_TABLE_REGISTRY.add(adr, _capTableUuid[adr]);
             _approvedCount++;
             _capTableStatus[adr] = 2;
         } else {
@@ -70,6 +71,10 @@ contract CapTableQue is Controllable {
 
     function getStatus(address adr) external view returns (uint256) {
         return _capTableStatus[adr];
+    }
+
+    function info(address adr) external view returns (uint256 status, bytes32 uuid) {
+        return (_capTableStatus[adr],_capTableUuid[adr] );
     }
 
     function list() external view returns (address[] memory capTableList) {
