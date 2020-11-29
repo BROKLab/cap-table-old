@@ -28,7 +28,7 @@ export const ProcessQue: React.FC<Props> = ({ ...props }) => {
         };
         doAsync();
         return () => { subscribed = false }
-    }, [])
+    }, [currentAddress, props.capTableQue])
 
     const processQue = async (decision: boolean) => {
         const reasonBytes32 = ethers.utils.formatBytes32String(reason)

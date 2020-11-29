@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { Box, Button, Grid, Heading, Text } from 'grommet';
+import { Box, Grid, Heading, Text } from 'grommet';
 import React, { useEffect, useState } from 'react';
 import { CapTableQue } from '../../../hardhat/typechain/CapTableQue';
 import { ProcessQue } from '../../Que/ProcessQue';
@@ -36,22 +36,18 @@ export const CapTableQueDetails: React.FC<Props> = ({ ...props }) => {
         };
         doAsync();
         return () => { subscribed = false }
-    }, [])
+    }, [props.capTableQue, props.capTableAddress])
 
     const getStatus = (status: QueStatus) => {
         switch (status) {
             case QueStatus.Approved:
                 return "Godkjent"
-                break;
             case QueStatus.Declined:
                 return "Avslått"
-                break;
             case QueStatus.Qued:
                 return "I kø"
-                break;
             default:
                 return "Ikke gyldig status"
-                break;
         }
     }
     return (
@@ -64,7 +60,6 @@ export const CapTableQueDetails: React.FC<Props> = ({ ...props }) => {
                         <Text weight="bold">{info.uuid}</Text>
                     </Grid>
                 }
-
                 {info &&
                     <Grid responsive={true} columns={["small", "flex"]}>
                         <Text>Status</Text>
@@ -72,7 +67,6 @@ export const CapTableQueDetails: React.FC<Props> = ({ ...props }) => {
 
                     </Grid>
                 }
-
                 {info &&
                     <Grid responsive={true} columns={["small", "flex", "flex"]}>
                         <Text></Text>
@@ -81,10 +75,6 @@ export const CapTableQueDetails: React.FC<Props> = ({ ...props }) => {
                         </Modal>
                     </Grid>
                 }
-
-
-
-
             </Box>
         </Box>
     )
