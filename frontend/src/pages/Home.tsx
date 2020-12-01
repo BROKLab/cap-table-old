@@ -7,7 +7,7 @@ export const Home: React.FC<Props> = () => {
 
     return (
         <>
-            <Heading level={3}>Velkommen til <Text size="xxlarge" weight="bold" style={{ fontStyle: "italic" }}>Forvalt</Text> appen</Heading>
+            <Heading level={3}>Velkommen til <Text size="xxlarge" weight="bold" style={{ fontStyle: "italic" }}>Brønnøysundregistrene Aksjeeierbok</Text></Heading>
         </>
     )
 }

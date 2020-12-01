@@ -11,7 +11,7 @@ export function getStatus(status: QueStatus) {
     case QueStatus.Declined:
       return "Avslått";
     case QueStatus.Qued:
-      return "I kø";
+      return "Venter godkjenning fra Brønnøysundregistrene";
     default:
       return "Ikke gyldig status";
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Header, Image, ResponsiveContext } from 'grommet';
+import { Box, Button, Header, Image, ResponsiveContext,Text } from 'grommet';
 import { Link } from 'react-router-dom';
 import { Account } from './Account';
 
@@ -19,6 +19,7 @@ export const Navigation: React.FC<Props> = () => {
                         : <Image src={BRREG_LOGO_SVG} margin="small" height="37px"></Image>
                     }
                 </Link>
+                <Text size="large" margin={{"left":"3em"}}>Aksjeeierbok</Text>
             </Box>
             <Box direction="row" gap="small" >
                 <Link to="/captable/create">
