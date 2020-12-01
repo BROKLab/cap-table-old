@@ -20,6 +20,7 @@ const createArrayWithNumbers = (length: number) => {
 }
 
 
+
 export const BatchIssue: React.FC<Props> = ({ ...props }) => {
     const { handleSubmit, control, errors, setValue } = useForm<FormData>({
         defaultValues: {
@@ -32,6 +33,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
     const history = useHistory()
     const [partitions, setPartitions] = useState<BytesLike[]>([]);
     const [newPartition, setNewPartition] = useState("");
+    const partitionsIsHidden = true; // TODO 🤷‍♀️. Should only be shown when "Yes" i selected in the step above. https://trello.com/c/GRQXqkH6/131-batchissue-partitions-is-hidden-unless-the-user-selects-that-it-should-be-shown
 
     // Get partitions
     useEffect(() => {
@@ -68,10 +70,21 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
     }
 
 
+
     const COLUMNS = { count: 3, size: "auto" }
     return (
         <Box gap="medium">
             <Box gap="small">
+                <Grid columns="1" fill="horizontal" gap="small">
+                    <Text size="small" weight="bold" truncate>Har selskapet aksjeklasser?</Text>
+                </Grid>
+                <Box gap="small" direction="row-responsive">
+                    <Button color="black" label="Ja, legg til aksjeklasser" onClick={() => setRows(rows + 1)} style={{ borderRadius: "0px" }}></Button>
+                    <Button color="black" label="Nei, selskapet har kun ordinære aksjer" onClick={() => setRows(rows + 1)} style={{ borderRadius: "0px" }}></Button>
+                </Box>
+            </Box>
+
+            <Box gap="small" hidden={partitionsIsHidden}>
                 <Grid columns={["medium", "small"]}>
                     <TextInput size="small" value={newPartition} onChange={(e) => setNewPartition(e.target.value)} placeholder="Navn på partisjon feks. a-aksje"></TextInput>
                     <Button size="small" label="Foreslå partisjon" onClick={() => handleNewPartition()}></Button>
@@ -82,7 +95,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
                 <Box gap="small">
                     <Grid columns={COLUMNS} fill="horizontal" gap="small">
                         <Text size="small" weight="bold" truncate>Addresse</Text>
-                        <Text size="small" weight="bold" truncate>Beløp</Text>
+                        <Text size="small" weight="bold" truncate>Antall aksjer</Text>
                         <Text size="small" weight="bold" truncate>Partisjon</Text>
                     </Grid>
                     {createArrayWithNumbers(rows).map((rowNr) =>
