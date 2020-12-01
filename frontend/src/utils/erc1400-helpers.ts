@@ -1,9 +1,4 @@
-import {
-  getERC20MintableBurnable,
-  getCapTable,
-  getPropertyCDP,
-} from "./contracts";
-import { ethers, BigNumber } from "ethers";
+import { BigNumber, BytesLike } from "ethers";
 import { ERC1400 } from "../hardhat/typechain/ERC1400";
 
 export interface CollateralDetail {
@@ -52,89 +47,99 @@ export interface CollateralDetails {
 // };
 
 export const getERC1400Addresses = async (
-  address: string,
-  partitionFilter = "",
-  capTable: ERC1400
+  capTable: ERC1400,
+  partitionFilter?: BytesLike,
+  fromBlock?: number
 ) => {
-  const logs1 = await capTable.provider
-    .getLogs({
-      fromBlock: 0,
-      address: address,
-      toBlock: "latest",
-      topics: [
-        ethers.utils.id(
-          `TransferByPartition(bytes32,address,address,address,uint256,bytes,bytes)`
-        ),
-      ],
-    })
-    .finally(() => []);
+  const _partitionFilter = partitionFilter ? partitionFilter : null;
+  const _fromBlock = fromBlock ? fromBlock : 0;
+  const issueByPartition = await capTable.queryFilter(
+    capTable.filters.IssuedByPartition(
+      _partitionFilter,
+      null,
+      null,
+      null,
+      null,
+      null
+    ),
+    _fromBlock,
+    "latest"
+  );
+  const transferByPartition = await capTable.queryFilter(
+    capTable.filters.TransferByPartition(
+      _partitionFilter,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ),
+    _fromBlock,
+    "latest"
+  );
+  const redeemByPartition = await capTable.queryFilter(
+    capTable.filters.RedeemedByPartition(
+      _partitionFilter,
+      null,
+      null,
+      null,
+      null
+    ),
+    _fromBlock,
+    "latest"
+  );
 
-  const logs2 = await capTable.provider
-    .getLogs({
-      fromBlock: 0,
-      address: address,
-      toBlock: "latest",
-      topics: [
-        ethers.utils.id(
-          "IssuedByPartition(bytes32,address,address,uint256,bytes,bytes)"
-        ),
-      ],
-    })
-    .finally(() => []);
+  const logs = [
+    ...redeemByPartition,
+    ...transferByPartition,
+    ...issueByPartition,
+  ];
 
-  const logs3 = await capTable.provider
-    .getLogs({
-      fromBlock: 0,
-      address: address,
-      toBlock: "latest",
-      topics: [
-        ethers.utils.id(
-          "RedeemedByPartition(bytes32,address,address,uint256,bytes,bytes)"
-        ),
-      ],
-    })
-    .finally(() => []);
-
-  const logs = [...logs1, ...logs2, ...logs3];
-
-  // console.log("logs => ", logs);
-
-  const events = logs.map((log) => {
-    return { ...capTable.interface.parseLog(log) };
-  });
-  // console.log("events => ", events);
-
-  // Only need .to addresses to get every possible token holder
-  // filter out duplicate values
-  const partitionFilterBytes32 =
-    partitionFilter && partitionFilter.substr(0, 2) !== "0x"
-      ? ethers.utils.formatBytes32String(partitionFilter)
-      : partitionFilter;
-  const addresses = events
+  const results = logs
     .filter((event) => {
-      if (partitionFilter) {
-        if (
-          event.values.partition === partitionFilterBytes32 ||
-          event.values.fromPartition === partitionFilterBytes32 ||
-          event.values.toPartition === partitionFilterBytes32
-        ) {
+      if (event.args) {
+        if ("to" in event.args && "partition" in event.args) {
           return true;
-        } else {
-          return false;
         }
       }
-      return true;
+      return false;
     })
     .map((event) => {
-      return event.values.to;
+      if (event.args) {
+        if ("to" in event.args && "partition" in event.args) {
+          return {
+            address: event.args.to as string,
+            partition: event.args.partition as BytesLike,
+          };
+        }
+      }
+      return undefined;
     })
-    .reduce(
-      (prev, cur, i, arr) => (prev.indexOf(cur) === -1 ? [...prev, cur] : prev),
-      []
-    );
-  console.log("getERC1400Addresses", addresses);
+    .reduce((prev: { address: string; partition: BytesLike }[], cur) => {
+      if (!cur) return prev;
+      const exist =
+        prev.findIndex((event) => {
+          return event.address === cur.address &&
+            event.partition === cur.partition
+            ? true
+            : false;
+        }) !== -1;
+      return exist ? prev : [...prev, cur];
+    }, [])
+    .map(async (event) => {
+      const balance = await capTable.balanceOfByPartition(
+        event.partition,
+        event.address
+      );
+      return {
+        ...event,
+        balance: balance,
+      };
+    });
+  const addresses = await Promise.all(results);
 
-  return addresses as string[];
+  return addresses;
 };
 
 // export const filterCDPHolders = async (

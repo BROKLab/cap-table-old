@@ -19,7 +19,6 @@ export const CapTablePage: React.FC<Props> = ({ ...props }) => {
     const erc1400 = useContext(ERC1400Context);
     const capTable = erc1400.factory?.attach(address)
 
-
     return (
         <Box>
             <Heading>Cap table</Heading>

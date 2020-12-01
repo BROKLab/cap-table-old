@@ -1,31 +1,28 @@
-import React, { useState } from 'react';
 import { Box, Button, Layer } from 'grommet';
+import React from 'react';
 
 interface Props {
-    label: string
-    buttonSize?: "small" | "medium" | "large"
+    show: boolean,
+    setShow: (show: boolean) => void
 }
 
-export const Modal: React.FC<Props> = ({ buttonSize = "medium", ...props }) => {
-    const [show, setShow] = useState(false);
-
+export const Modal: React.FC<Props> = ({ ...props }) => {
+    if (!props.show) return null
     return (
-        <>
-            <Button size={buttonSize} label={props.label} onClick={() => setShow(!show)}></Button>
-            {show &&
-                <Layer
-                    onEsc={() => setShow(false)}
-                    onClickOutside={() => setShow(false)}
-                    animation="slide"
-                    modal
-                    position="center"
-                >
-                    <Box margin="medium" align="center" gap="small" >
-                        {props.children}
-                        <Button label="Lukk" onClick={() => setShow(false)} />
-                    </Box>
-                </Layer>
-            }
-        </>
+        <Layer
+            onEsc={() => props.setShow(false)}
+            onClickOutside={() => props.setShow(false)}
+            animation="slide"
+            modal
+            position="center"
+        >
+            <Box margin="medium" align="center" gap="small" >
+                {props.children}
+                <Box width="full">
+                    <Button label="Lukk" onClick={() => props.setShow(false)} />
+                </Box>
+            </Box>
+        </Layer>
+
     )
 }

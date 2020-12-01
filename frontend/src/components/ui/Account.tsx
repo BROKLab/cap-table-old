@@ -1,20 +1,17 @@
 
 
 import { Box, Button, Grid, Select, Text } from 'grommet';
-import React, { useContext, useEffect, useState } from 'react';
-import { CurrentAddressContext, HardhatContext, ProviderContext } from './../../hardhat/HardhatContext';
+import React, { useContext, useState } from 'react';
+import { CurrentAddressContext, HardhatContext } from './../../hardhat/HardhatContext';
 
 interface Props { }
 
 export const Account: React.FC<Props> = () => {
-    const [provider] = useContext(ProviderContext)
+
     const [address] = useContext(CurrentAddressContext)
     const { init, currentHardhatProvider, loading, providers } = useContext(HardhatContext)
     const [selectedProvider, setSelectedProvider] = useState<string>();
 
-    useEffect(() => {
-        console.log("Provider in comp", provider)
-    }, [provider])
     return (
         <Box gap="small" >
 

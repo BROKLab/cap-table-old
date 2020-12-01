@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { SpinnerDiamond } from 'spinners-react/lib/esm/SpinnerDiamond';
 import { CapTableQueContext, ERC1400Context, HardhatContext } from "../../hardhat/HardhatContext";
 import { formatCurrency } from '../../utils/numbers';
-import { getPasswordFromLocalstorage, removePassword } from '../../utils/passwordBlockAPI';
+import { removePassword } from '../../utils/passwordBlockAPI';
 
 interface Props { }
 
@@ -29,78 +29,76 @@ interface ApiRespons {
 
 const DEFAULT_DATA = [
     {
-        "Orgnr": 964785538,
-        "Navn": "BLOKKNESSET AS",
-        "Kapital": 256000,
-        "Aksjer": 500,
-        "Vedtektsdato": "04.07.2017"
-    },
-    {
-        "Orgnr": 988492728,
-        "Navn": "BLOKKTINN AS",
-        "Kapital": 100000,
-        "Aksjer": 100,
-        "Vedtektsdato": "11.05.2005"
-    },
-    {
-        "Orgnr": 993643831,
-        "Navn": "BLOKKSBERGKLINIKKEN AS",
-        "Kapital": 100000,
-        "Aksjer": 100,
-        "Vedtektsdato": "02.01.2009"
-    },
-    {
-        "Orgnr": 921811829,
-        "Navn": "BLOKKFABRIKKTOMTA AS",
-        "Kapital": 302775.22,
-        "Aksjer": 1,
-        "Vedtektsdato": "25.09.2018"
-    },
-    {
-        "Orgnr": 923575812,
-        "Navn": "BLOKSBJERG AS",
-        "Kapital": 30000,
-        "Aksjer": 1,
-        "Vedtektsdato": "30.09.2019"
-    },
-    {
-        "Orgnr": 921799381,
-        "Navn": "BLOKMAR AS",
-        "Kapital": 30000,
+        "Orgnr": 918465138,
+        "Navn": "AUSTDAL-AS",
+        "Kapital": 30300,
         "Aksjer": 300,
-        "Vedtektsdato": "01.11.2018"
+        "Vedtektsdato": "17.01.2020"
     },
     {
-        "Orgnr": 995589753,
-        "Navn": "BLOKKHEIM AS",
-        "Kapital": 100000,
+        "Orgnr": 922188157,
+        "Navn": "ARB",
+        "Kapital": 30000,
         "Aksjer": 100,
-        "Vedtektsdato": "07.05.2010"
+        "Vedtektsdato": "20.04.2020"
     },
     {
-        "Orgnr": 979472579,
-        "Navn": "BLOKSBERG INVEST AS",
+        "Orgnr": 999101720,
+        "Navn": "AKTIVEBARN.NO",
         "Kapital": 100000,
         "Aksjer": 100000,
-        "Vedtektsdato": "05.02.2014"
+        "Vedtektsdato": "28.02.2018"
     },
     {
-        "Orgnr": 998315824,
-        "Navn": "BLOKSBERG FRIS�R AS",
+        "Orgnr": 922228701,
+        "Navn": "AKSJESELSKAPET-REDITUS",
         "Kapital": 30000,
         "Aksjer": 30,
-        "Vedtektsdato": "15.03.2012"
+        "Vedtektsdato": "01.02.2019"
     },
     {
-        "Orgnr": 917216037,
-        "Navn": "BLOKKTINDEN EIENDOM AS",
+        "Orgnr": 914492742,
+        "Navn": "ALFA-AS",
         "Kapital": 30000,
-        "Aksjer": 3000,
-        "Vedtektsdato": "23.03.2016"
+        "Aksjer": 2,
+        "Vedtektsdato": "19.11.2014"
+    },
+    {
+        "Orgnr": 810130822,
+        "Navn": "ALSTRA AS",
+        "Kapital": 100000,
+        "Aksjer": 10,
+        "Vedtektsdato": "20.04.2002"
+    },
+    {
+        "Orgnr": 810215542,
+        "Navn": "AS SUNBYGG",
+        "Kapital": 570000,
+        "Aksjer": 100,
+        "Vedtektsdato": "22.11.2004"
+    },
+    {
+        "Orgnr": 810359862,
+        "Navn": "AUTOBJ�RN A/S",
+        "Kapital": 792000,
+        "Aksjer": 7920,
+        "Vedtektsdato": "11.03.2005"
+    },
+    {
+        "Orgnr": 810431172,
+        "Navn": "AS SCAN-WOOD",
+        "Kapital": 210000,
+        "Aksjer": 30,
+        "Vedtektsdato": "24.04.2012"
+    },
+    {
+        "Orgnr": 811012572,
+        "Navn": "AS CENTRALVERKSTEDET",
+        "Kapital": 270000,
+        "Aksjer": 0,
+        "Vedtektsdato": "10.12.2013"
     }
 ]
-
-
 
 export const CapTableCreate: React.FC<Props> = () => {
     const { handleSubmit, watch, control, errors, setValue, formState, setError } = useForm<FormData>({
@@ -131,13 +129,11 @@ export const CapTableCreate: React.FC<Props> = () => {
             try {
                 if (!searchQuery) return
                 setIsSearchingBrreg(true)
-                const password = getPasswordFromLocalstorage()
                 const isOrgName = isNaN(+searchQuery)
                 if (isOrgName) {
                     const res: AxiosResponse<ApiRespons> = await axios.get("https://auth-oracle.now.sh/api/v1/org", {
                         params: {
                             name: searchQuery,
-                            password: password
                         }
                     }).catch((err: AxiosError<ApiRespons>) => {
                         if (err.response?.status === 401) {
@@ -151,7 +147,6 @@ export const CapTableCreate: React.FC<Props> = () => {
                     const res: AxiosResponse<ApiRespons> = await axios.get("https://auth-oracle.now.sh/api/v1/org", {
                         params: {
                             orgnr: searchQuery.replace(/\s/g, ''),
-                            password: password
                         }
                     }).catch(err => {
                         if (err.response?.status === 401) {
@@ -204,7 +199,6 @@ export const CapTableCreate: React.FC<Props> = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Heading>Opprett aksjeeierbok</Heading>
                 <Box gap="medium" margin="large">
-
                     <Box gap="small">
                         <Text>Søk</Text>
                         <Grid columns={["flex", "auto"]}>

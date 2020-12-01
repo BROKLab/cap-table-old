@@ -1,7 +1,8 @@
 import { ethers } from 'ethers';
-import { Box, Grid, Heading, Text } from 'grommet';
+import { Box, Button, Grid, Heading, Text } from 'grommet';
 import React, { useEffect, useState } from 'react';
 import { CapTableQue } from '../../../hardhat/typechain/CapTableQue';
+import { getStatus } from '../../../utils/que-helpers';
 import { ProcessQue } from '../../Que/ProcessQue';
 import { Modal } from '../../ui/Modal';
 
@@ -15,13 +16,10 @@ interface QueInfo {
     status: number
 }
 
-export enum QueStatus {
-    Qued = 1,
-    Approved = 2,
-    Declined = 3,
-}
+
 export const CapTableQueDetails: React.FC<Props> = ({ ...props }) => {
     const [info, setInfo] = useState<QueInfo>();
+    const [showQueProcess, setShowQueProcess] = useState(false);
 
     useEffect(() => {
         let subscribed = true
@@ -38,18 +36,7 @@ export const CapTableQueDetails: React.FC<Props> = ({ ...props }) => {
         return () => { subscribed = false }
     }, [props.capTableQue, props.capTableAddress])
 
-    const getStatus = (status: QueStatus) => {
-        switch (status) {
-            case QueStatus.Approved:
-                return "Godkjent"
-            case QueStatus.Declined:
-                return "Avslått"
-            case QueStatus.Qued:
-                return "I kø"
-            default:
-                return "Ikke gyldig status"
-        }
-    }
+
     return (
         <Box>
             <Heading level={3}>Kø detaljer</Heading>
@@ -70,12 +57,14 @@ export const CapTableQueDetails: React.FC<Props> = ({ ...props }) => {
                 {info &&
                     <Grid responsive={true} columns={["small", "flex", "flex"]}>
                         <Text></Text>
-                        <Modal label="Kø admin" buttonSize="small">
-                            <ProcessQue capTableQue={props.capTableQue} capTableAddress={props.capTableAddress}></ProcessQue>
-                        </Modal>
+                        <Button label="Kø admin" size="small" onClick={() => setShowQueProcess(!showQueProcess)}></Button>
+
                     </Grid>
                 }
             </Box>
+            <Modal show={showQueProcess} setShow={setShowQueProcess} >
+                <ProcessQue capTableQue={props.capTableQue} capTableAddress={props.capTableAddress}></ProcessQue>
+            </Modal>
         </Box>
     )
 }

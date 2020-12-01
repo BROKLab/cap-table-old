@@ -21,8 +21,6 @@ export const ProcessQue: React.FC<Props> = ({ ...props }) => {
         const doAsync = async () => {
             const controllers = await props.capTableQue.controllers()
             if (subscribed) {
-                console.log(controllers)
-                console.log(currentAddress)
                 setIsAdmin(controllers.indexOf(currentAddress) !== -1)
             }
         };

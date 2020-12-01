@@ -12,7 +12,9 @@ export const OnBoard: React.FC<Props> = ({ ...props }) => {
     return (
         <Box>
             <Heading level={3}>Kom igang</Heading>
-            <BatchIssue capTable={props.capTable}></BatchIssue>
+            <Box elevation="large" gap="small" pad="small" margin={{ top: "large" }}>
+                <BatchIssue capTable={props.capTable}></BatchIssue>
+            </Box>
         </Box>
     )
 }

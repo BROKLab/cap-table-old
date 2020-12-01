@@ -8,6 +8,8 @@ import { Theme } from "./assets/Theme";
 import { Home } from "./pages/Home";
 import { CapTableCreate } from "./components/CapTable/CapTableCreate";
 import { CapTablePage } from "./pages/CapTablePage";
+import { CapTableQuePage } from "./pages/CapTableQuePage";
+import { CapTableRegistryPage } from "./pages/CapTableRegistryPage";
 
 
 function App() {
@@ -27,6 +29,9 @@ function App() {
                 <Route exact path="/captable/create" component={CapTableCreate} />
 
                 <Route path="/capTable/:address" component={CapTablePage} />
+
+                <Route path="/que" component={CapTableQuePage} />
+                <Route path="/register" component={CapTableRegistryPage} />
 
               </Switch>
             </Main>

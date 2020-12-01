@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
-import { Box, Grid, Heading, Text } from 'grommet';
+import { Box, Grid, Text } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
-import { CapTableQueContext, CapTableRegistryContext } from '../../hardhat/HardhatContext';
+import { CapTableQueContext, CapTableRegistryContext, CurrentAddressContext } from '../../hardhat/HardhatContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { CapTableQueDetails } from './Que/CapTableQueDetails';
 
@@ -11,7 +11,8 @@ interface Props {
 
 interface CapTableData {
     name: string
-    totalSupply: string
+    totalSupply: string,
+    isController: boolean
 }
 interface CapTableRegistryData {
     uuid: string
@@ -24,6 +25,8 @@ export const Info: React.FC<Props> = ({ capTable, ...pops }) => {
     const [registryData, setRegistryData] = useState<CapTableRegistryData>();
     const capTableRegistry = useContext(CapTableRegistryContext)
     const capTableQue = useContext(CapTableQueContext)
+    const [currentAddress] = useContext(CurrentAddressContext)
+
 
     useEffect(() => {
         let subscribed = true
@@ -33,8 +36,9 @@ export const Info: React.FC<Props> = ({ capTable, ...pops }) => {
                 .totalSupply()
                 .catch(() => ethers.constants.Zero);
             const totalSupply = ethers.utils.formatEther(totalSupplyBN);
+            const isController = await (await capTable.controllers()).findIndex(address => address === currentAddress) !== -1
             if (subscribed) {
-                setData({ name, totalSupply });
+                setData({ name, totalSupply, isController });
             }
             if (capTableRegistry.instance) {
                 const { uuid, active } = await capTableRegistry.instance.info(capTable.address)
@@ -48,7 +52,7 @@ export const Info: React.FC<Props> = ({ capTable, ...pops }) => {
         };
         doAsync();
         return () => { subscribed = false }
-    }, [capTable, capTableRegistry.instance])
+    }, [capTable, capTableRegistry.instance, currentAddress])
 
     return (
         <Box gap="small">
@@ -74,6 +78,12 @@ export const Info: React.FC<Props> = ({ capTable, ...pops }) => {
                 <Grid columns={["small", "flex"]}>
                     <Text >Antall aksjer</Text>
                     <Text weight="bold">{data.totalSupply}</Text>
+                </Grid>
+            }
+            {data &&
+                <Grid columns={["small", "flex"]}>
+                    <Text >Skrive rettigheter</Text>
+                    <Text weight="bold">{data.isController ? "Ja" : "Nei"}</Text>
                 </Grid>
             }
             {registryData && !registryData.active && capTableQue.instance &&
