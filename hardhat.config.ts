@@ -42,6 +42,9 @@ const config: HardhatUserConfig = {
           "shrug antique orange tragic direct drop abstract ring carry price anchor train",
       },
     },
+    brreg: {
+      url: "",
+    },
   },
   solidity: {
     compilers: [
