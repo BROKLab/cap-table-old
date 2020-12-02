@@ -19,6 +19,11 @@ const createArrayWithNumbers = (length: number) => {
     return Array.from({ length }, (_, k) => k);
 }
 
+const DEFAULT_PARTITIONS = [
+    ethers.utils.formatBytes32String("A-AKSJE"),
+    ethers.utils.formatBytes32String("B-AKSJE"),
+]
+
 
 
 export const BatchIssue: React.FC<Props> = ({ ...props }) => {
@@ -26,14 +31,15 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
         defaultValues: {
             address: ["0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"],
             amount: [""],
-            partition: [""],
+            partition: [],
         }
     });
     const [rows, setRows] = useState(1);
     const history = useHistory()
-    const [partitions, setPartitions] = useState<BytesLike[]>([]);
+    const [partitions, setPartitions] = useState<BytesLike[]>(DEFAULT_PARTITIONS);
     const [newPartition, setNewPartition] = useState("");
-    const partitionsIsHidden = true; // TODO 🤷‍♀️. Should only be shown when "Yes" i selected in the step above. https://trello.com/c/GRQXqkH6/131-batchissue-partitions-is-hidden-unless-the-user-selects-that-it-should-be-shown
+    const [useDefaultPartitions, setUseDefaultPartitions] = useState(true);
+    // const [partitionsIsHidden, setPartitionsIsHidden] =  useState(true)
 
     // Get partitions
     useEffect(() => {
@@ -41,7 +47,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
         const doAsync = async () => {
             const partitionsBytes32 = await props.capTable.totalPartitions()
             if (subscribed) {
-                setPartitions(partitionsBytes32)
+                setPartitions(old => [...old, ...partitionsBytes32])
             }
         };
         doAsync();
@@ -69,8 +75,6 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
         setNewPartition("")
     }
 
-
-
     const COLUMNS = { count: 3, size: "auto" }
     return (
         <Box gap="medium">
@@ -79,18 +83,19 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
                     <Text size="small" weight="bold" truncate>Har selskapet aksjeklasser?</Text>
                 </Grid>
                 <Box gap="small" direction="row-responsive">
-                    <Button color="black" label="Ja, legg til aksjeklasser" onClick={() => setRows(rows + 1)} style={{ borderRadius: "0px" }}></Button>
-                    <Button color="black" label="Nei, selskapet har kun ordinære aksjer" onClick={() => setRows(rows + 1)} style={{ borderRadius: "0px" }}></Button>
+                    <Button focusIndicator={false} color={useDefaultPartitions ? "black" : "green"} label="Ja, legg til aksjeklasser" onClick={() => setUseDefaultPartitions(false)} style={{ borderRadius: "0px" }}></Button>
+                    <Button focusIndicator={false} color={useDefaultPartitions ? "green" : "black"} label="Nei, selskapet har kun ordinære aksjer" onClick={() => setUseDefaultPartitions(true)} style={{ borderRadius: "0px" }}></Button>
                 </Box>
             </Box>
-
-            <Box gap="small" hidden={partitionsIsHidden}>
-                <Grid columns={["medium", "small"]}>
-                    <TextInput size="small" value={newPartition} onChange={(e) => setNewPartition(e.target.value)} placeholder="Navn på partisjon feks. a-aksje"></TextInput>
-                    <Button size="small" label="Foreslå partisjon" onClick={() => handleNewPartition()}></Button>
-                </Grid>
-                <Text size="small">Partisjoner blir først lagret når du utsteder en aksje på den.</Text>
-            </Box>
+            {!useDefaultPartitions &&
+                <Box gap="small">
+                    <Grid columns={["medium", "small"]}>
+                        <TextInput size="small" value={newPartition} onChange={(e) => setNewPartition(e.target.value)} placeholder="Navn på partisjon feks. a-aksje"></TextInput>
+                        <Button size="small" label="Foreslå partisjon" onClick={() => handleNewPartition()}></Button>
+                    </Grid>
+                    <Text size="small">Partisjoner blir først lagret når du utsteder en aksje på den.</Text>
+                </Box>
+            }
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Box gap="small">
                     <Grid columns={COLUMNS} fill="horizontal" gap="small">

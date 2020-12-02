@@ -24,7 +24,7 @@ function App() {
             {/* Content swtich */}
             <Main pad="xlarge" height={{ min: "75vh" }} >
               <Switch>
-                <Route path="/" component={Home} />
+                <Route exact path="/" component={Home} />
                 <Route path="/captable/create" component={CapTableCreate} />
                 <Route path="/capTable/:address" component={CapTablePage} />
                 <Route path="/que" component={CapTableQuePage} />
@@ -35,7 +35,7 @@ function App() {
             <Footer background="brand" pad="medium" height={{ min: "10vh" }}>
               <Box align="center" justify="center" alignContent="center" fill="horizontal" >
                 <Text textAlign="center" size="small">
-                Brønnøysundregistrene Aksjeeierbok<br/>
+                  Brønnøysundregistrene Aksjeeierbok<br />
                 Del av Brønnøysundregistrene Sandkasse
                 </Text>
               </Box>
