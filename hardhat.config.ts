@@ -31,10 +31,7 @@ const config: HardhatUserConfig = {
     brreg: {
       url:
         "https://e0cteq8qnh:IY2scS2ywMZkinR5m4sS7GBs7EDgm4Mh9F1uUVkmKFI@e0qchlost7-e0zi3w4q2r-rpc.de0-aws.kaleido.io",
-
       inject: true,
-      user: "e0cteq8qnh",
-      password: "IY2scS2ywMZkinR5m4sS7GBs7EDgm4Mh9F1uUVkmKFI",
       providerType: "JsonRpcProvider",
       accounts: {
         mnemonic: "test test test test test test test test test test test junk",
