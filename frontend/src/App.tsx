@@ -24,15 +24,11 @@ function App() {
             {/* Content swtich */}
             <Main pad="xlarge" height={{ min: "75vh" }} >
               <Switch>
-                <Route exact path="/" component={Home} />
-
-                <Route exact path="/captable/create" component={CapTableCreate} />
-
+                <Route path="/" component={Home} />
+                <Route path="/captable/create" component={CapTableCreate} />
                 <Route path="/capTable/:address" component={CapTablePage} />
-
                 <Route path="/que" component={CapTableQuePage} />
                 <Route path="/register" component={CapTableRegistryPage} />
-
               </Switch>
             </Main>
             {/* footer */}
