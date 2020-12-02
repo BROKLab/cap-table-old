@@ -83,8 +83,8 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
                     <Text size="small" weight="bold" truncate>Har selskapet aksjeklasser?</Text>
                 </Grid>
                 <Box gap="small" direction="row-responsive">
-                    <Button focusIndicator={false} color={useDefaultPartitions ? "black" : "green"} label="Ja, legg til aksjeklasser" onClick={() => setUseDefaultPartitions(false)} style={{ borderRadius: "0px" }}></Button>
-                    <Button focusIndicator={false} color={useDefaultPartitions ? "green" : "black"} label="Nei, selskapet har kun ordinære aksjer" onClick={() => setUseDefaultPartitions(true)} style={{ borderRadius: "0px" }}></Button>
+                    <Button size="small" hoverIndicator={false} focusIndicator={false} label="Ja, legg til aksjeklasser" onClick={() => setUseDefaultPartitions(false)} style={{ fontWeight: !useDefaultPartitions ? "bold" : "initial" }}></Button>
+                    <Button size="small" hoverIndicator={false} focusIndicator={false} label="Nei, selskapet har kun ordinære aksjer" onClick={() => setUseDefaultPartitions(true)} style={{ fontWeight: useDefaultPartitions ? "bold" : "initial" }}></Button>
                 </Box>
             </Box>
             {!useDefaultPartitions &&
