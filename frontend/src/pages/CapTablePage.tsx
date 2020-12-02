@@ -1,4 +1,4 @@
-import { Box, Heading, Text } from 'grommet';
+import { Box, Text } from 'grommet';
 import React, { useContext } from 'react';
 import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 import { Details } from '../components/CapTable/Details';
@@ -21,7 +21,6 @@ export const CapTablePage: React.FC<Props> = ({ ...props }) => {
 
     return (
         <Box>
-            <Heading>Cap table</Heading>
             {!capTable &&
                 <Box align="center">
                     <Loading size={50}>

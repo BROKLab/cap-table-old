@@ -14,7 +14,7 @@ export const Details: React.FC<Props> = ({ ...props }) => {
 
     return (
         <Box>
-            <Heading level={3}>Details</Heading>
+            <Heading level={3}>Nøkkelopplysninger</Heading>
             <Info capTable={props.capTable}></Info>
             <Heading level={3}>Handlinger</Heading>
             <Actions capTable={props.capTable}></Actions>

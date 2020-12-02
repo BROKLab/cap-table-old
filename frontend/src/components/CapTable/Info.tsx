@@ -58,7 +58,7 @@ export const Info: React.FC<Props> = ({ capTable, ...pops }) => {
         <Box gap="small">
             {data &&
                 <Grid columns={["small", "flex"]}>
-                    <Text>Name</Text>
+                    <Text>Foretaksnavn</Text>
                     <Text weight="bold">{data.name}</Text>
                 </Grid>
             }
@@ -77,7 +77,7 @@ export const Info: React.FC<Props> = ({ capTable, ...pops }) => {
             {data &&
                 <Grid columns={["small", "flex"]}>
                     <Text >Antall aksjer</Text>
-                    <Text weight="bold">{data.totalSupply}</Text>
+                    <Text weight="bold">{data.totalSupply.slice(0, -2)}</Text>
                 </Grid>
             }
             {data &&
