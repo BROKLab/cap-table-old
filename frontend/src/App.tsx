@@ -1,4 +1,4 @@
-import { Box, Footer, Grommet, Text, Main } from "grommet";
+import { Box, Footer, Grommet, Text, Main, Paragraph } from "grommet";
 import React from 'react';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Hardhat } from "./hardhat/HardhatContext";
@@ -35,8 +35,8 @@ function App() {
             <Footer background="brand" pad="medium" height={{ min: "10vh" }}>
               <Box align="center" justify="center" alignContent="center" fill="horizontal" >
                 <Text textAlign="center" size="small">
-                  Brønnøysundregistrene Aksjeeierbok<br />
-                Del av Brønnøysundregistrene Sandkasse
+                  <Paragraph>Brønnøysundregistrene Aksjeeierbok</Paragraph>
+                  <Paragraph>Del av Brønnøysundregistrene Sandkasse</Paragraph>
                 </Text>
               </Box>
             </Footer>
