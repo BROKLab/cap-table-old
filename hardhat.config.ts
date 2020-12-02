@@ -24,26 +24,21 @@ task("accounts", "Prints the list of accounts", async (args, hre) => {
  */
 const config: HardhatUserConfig = {
   react: {
-    providerPriority: ["hardhat", "web3modal"],
+    providerPriority: ["brreg", "hardhat", "web3modal"],
     handle: ["ERC1400", "CapTableQue", "CapTableRegistry"],
   },
   networks: {
-    brregProd: {
+    brreg: {
       url:
-        "https://u1qdua80h5:Er0LWdZuKqOza22YNQKhtdFCbqRzhzGCRhuZgrtHZ9s@u1txh1ent0-u1ieecy018-rpc.us1-azure.kaleido.io",
+        "https://e0cteq8qnh:IY2scS2ywMZkinR5m4sS7GBs7EDgm4Mh9F1uUVkmKFI@e0qchlost7-e0zi3w4q2r-rpc.de0-aws.kaleido.io",
 
-      gasPrice: 0,
       inject: true,
-      user: "u1qdua80h5",
-      password: "Er0LWdZuKqOza22YNQKhtdFCbqRzhzGCRhuZgrtHZ9s",
+      user: "e0cteq8qnh",
+      password: "IY2scS2ywMZkinR5m4sS7GBs7EDgm4Mh9F1uUVkmKFI",
       providerType: "JsonRpcProvider",
       accounts: {
-        mnemonic:
-          "shrug antique orange tragic direct drop abstract ring carry price anchor train",
+        mnemonic: "test test test test test test test test test test test junk",
       },
-    },
-    brreg: {
-      url: "",
     },
   },
   solidity: {
