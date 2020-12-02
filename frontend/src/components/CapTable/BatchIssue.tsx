@@ -63,7 +63,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
                 // TODO : Handle CDP
                 const txData = "0x11"
                 const tx = await props.capTable.issueByPartition(data.partition[rowNr], data.address[rowNr], ethers.utils.parseEther(data.amount[rowNr]), txData)
-                tx.wait()
+                await tx.wait()
                 return Promise.resolve()
             }, Promise.resolve())
         history.push("/captable/" + props.capTable.address)

@@ -187,6 +187,7 @@ export const CapTableCreate: React.FC<Props> = () => {
         const DEFAULT_PARTITIONS = [ethers.utils.formatBytes32String("A")]
         const capTable = await erc1400.factory.deploy(data.org.Navn, data.org.Navn.substr(0, 3), 1, CONTROLLERS, DEFAULT_PARTITIONS)
         await capTable.deployed()
+        console.debug("CapTable deployed", capTable.address)
         const orgnr = data.org.Orgnr.toString();
         const tx = await capTableQue.instance.add(capTable.address, ethers.utils.formatBytes32String(orgnr))
         await tx.wait()
