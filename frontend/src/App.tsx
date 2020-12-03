@@ -42,7 +42,6 @@ function App() {
                 </Text>
               </Box>
             </Footer>
-
           </Box>
         </Symfoni>
       </Grommet>
