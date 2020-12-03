@@ -2,12 +2,13 @@
 
 import { Box, Button, Grid, Select, Text } from 'grommet';
 import React, { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { CurrentAddressContext, SymfoniContext } from './../../hardhat/SymfoniContext';
 
 interface Props { }
 
-const SHOW_PROVIDER_SWITCH = localStorage.getItem("PROVIDER_SWITCH ") || process.env.NODE_ENV === "development"
-
+const SHOW_PROVIDER_SWITCH = localStorage.getItem("PROVIDER_SWITCH ") /* || process.env.NODE_ENV === "development" */
+console.log(SHOW_PROVIDER_SWITCH)
 export const Account: React.FC<Props> = () => {
 
     const [address] = useContext(CurrentAddressContext)
@@ -16,7 +17,7 @@ export const Account: React.FC<Props> = () => {
 
     return (
         <Box gap="small" >
-            {SHOW_PROVIDER_SWITCH &&
+            {SHOW_PROVIDER_SWITCH === "true" &&
                 <Box>
                     <Grid gap="small" columns={["auto", "flex"]}>
                         <Select
@@ -36,6 +37,11 @@ export const Account: React.FC<Props> = () => {
                         }
                     </Box>
                 </Box>
+            }
+            {SHOW_PROVIDER_SWITCH !== "true" &&
+                <Link to="/account/onboard">
+                    <Button size="small" label="Logg inn" hoverIndicator focusIndicator={false} />
+                </Link>
             }
         </Box>
     )

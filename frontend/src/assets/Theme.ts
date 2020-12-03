@@ -74,6 +74,9 @@ export const Theme: ThemeType = deepFreeze({
   },
   button: {
     size: {
+      border: {
+        radius: "0px",
+      },
       small: {
         border: {
           radius: "0px",

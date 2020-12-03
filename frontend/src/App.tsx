@@ -29,6 +29,7 @@ function App() {
                 <Route path="/capTable/:address" component={CapTablePage} />
                 <Route path="/que" component={CapTableQuePage} />
                 <Route path="/register" component={CapTableRegistryPage} />
+                <Route path="/account" component={CapTableRegistryPage} />
               </Switch>
             </Main>
             {/* footer */}

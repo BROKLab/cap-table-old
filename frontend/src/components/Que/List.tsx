@@ -30,7 +30,6 @@ export const List: React.FC<Props> = ({ ...props }) => {
             if (subscribed) {
                 const listReveresed = list.slice().reverse()
                 setList(listReveresed)
-                console.log(list)
             }
         };
         doAsync();
@@ -57,8 +56,6 @@ export const List: React.FC<Props> = ({ ...props }) => {
         doAsync();
         return () => { subscribed = false }
     }, [list, props.capTableQue])
-
-
 
     return (
         <Box>
