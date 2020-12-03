@@ -18,9 +18,9 @@ pages:
   stage: deploy
   script:
     - CI=true npm run build
-    - rm -rf public
-    - mv build public
-    - cp public/index.html public/404.html
+    - rm -rf frontend/public
+    - mv frontend/build frontend/public
+    - cp frontend/public/index.html frontend/public/404.html
   artifacts:
     paths:
       - public # GitLab pages serve from a 'public' directory
