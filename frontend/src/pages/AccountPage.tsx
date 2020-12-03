@@ -1,9 +1,11 @@
-import { Accordion, AccordionPanel, Anchor, Box, Heading, Image, Paragraph, Text } from 'grommet';
+import { Accordion, AccordionPanel, Anchor, Box, Grid, Heading, Image, Paragraph, Text } from 'grommet';
 import { Checkmark } from 'grommet-icons';
 import React, { useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { setInterval } from 'timers';
+import { CopyText } from '../components/ui/CopyText';
 import { Loading } from '../components/ui/Loading';
+
 
 interface Props {
 }
@@ -16,10 +18,6 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
 
     const [hasWallet, sethasWallet] = useState(false);
     const [isCorrectChain, setIsCorrectChain] = useState(false);
-
-    const checkWallet = (): boolean => {
-        return "ethereum" in window
-    }
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -35,6 +33,8 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
             clearInterval(interval)
         }
     }, [])
+
+
 
     return (
         <Box>
@@ -60,13 +60,23 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
                             </AccordionPanel>
 
                             <AccordionPanel label={<Text margin="small" size="large">Koble til Brønnøysundregistrene nettverket<span role="img" aria-label="network">🕸</span></Text>}>
-                                <Box margin={{ left: "large" }} pad="small" >
+                                <Box margin={{ left: "large" }} pad="small" gap="small" >
                                     <Paragraph fill>Metamask er i utgangspunktet koblet til «Offentlig Ethereum». Her må man ha kryptovalutaen «ether» for å operere. Patentstyrets blokkjedeløsning kjører ikke på offentlig Ethereum, men på en Symfoni Solutions-kjede sammen med Brønnøysundregistrene.</Paragraph>
                                     <Paragraph fill>1. Klikk på «Ethereum hovednettverk»</Paragraph>
                                     <Image style={{ maxHeight: "200px" }} alignSelf="start" src={require("./../assets/metamask/rpcMainnet.png")} fit="contain"></Image>
                                     <Paragraph fill>2. Velg «Tilpasset RPC»</Paragraph>
                                     <Image style={{ maxHeight: "200px" }} alignSelf="start" src={require("./../assets/metamask/customRpc.png")} fit="contain"></Image>
+                                    <Paragraph fill>3. Fyll inn</Paragraph>
+                                    <Grid margin={{ left: "medium" }} columns={["small", "flex"]} gap="small">
+                                        <Text>Nettverksnavn:</Text>
+                                        <CopyText text="Brreg"></CopyText>
+                                        <Text>NY RPC-URL:</Text>
+                                        <CopyText text="https://e0cteq8qnh:IY2scS2ywMZkinR5m4sS7GBs7EDgm4Mh9F1uUVkmKFI@e0qchlost7-e0zi3w4q2r-rpc.de0-aws.kaleido.io"></CopyText>
+                                    </Grid>
+                                    <Text>Velg lagre</Text>
+                                    <Text>Oppsettet er ferdig. Lukk nettleservinduet</Text>
                                 </Box>
+                                <Text>{isCorrectChain ? "Fant rikig" : "feil"}</Text>
                             </AccordionPanel>
 
                             <AccordionPanel label={<Text margin="small" size="large">Ferdig <span role="img" aria-label="document">🧾</span></Text>}>
