@@ -1,6 +1,6 @@
 image: node:12.20.0 # change to match your node version
 variables:
-  PUBLIC_URL: "/brreg1/forvalt" # slash is important
+  PUBLIC_URL: "/forvalt" # slash is important
 
 cache:
   paths:
