@@ -64,7 +64,7 @@ export const List: React.FC<Props> = ({ ...props }) => {
                 columns={[
                     {
                         property: 'uuid',
-                        header: <Text>ID</Text>,
+                        header: <Text>Forslått ID</Text>,
                         render: (data) => ethers.utils.parseBytes32String(data.uuid)
                     },
                     // {

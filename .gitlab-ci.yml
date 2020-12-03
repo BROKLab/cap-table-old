@@ -19,10 +19,10 @@ pages:
   script:
     - CI=true npm run build
     - rm -rf public
-    - mv build public
+    - mv build ../public
     - cp public/index.html public/404.html
   artifacts:
     paths:
-      - frontend/public # GitLab pages serve from a 'public' directory
+      - public # GitLab pages serve from a 'public' directory
   only:
     - master # run on master branch

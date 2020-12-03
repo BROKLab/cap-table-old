@@ -119,9 +119,6 @@ export const CapTableCreate: React.FC<Props> = () => {
             setValue("searchInput", "915772137")
         }
     }, [setValue])
-    useEffect(() => {
-        console.log("orgWatch", orgWatch)
-    }, [orgWatch])
 
     useEffect(() => {
         const timer = setTimeout(async () => {

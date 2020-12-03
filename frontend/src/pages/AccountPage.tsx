@@ -1,10 +1,8 @@
-import { Accordion, AccordionPanel, Anchor, Box, Grid, Heading, Image, Paragraph, Text } from 'grommet';
-import { Checkmark } from 'grommet-icons';
-import React, { useEffect, useState } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import { setInterval } from 'timers';
+import { Accordion, AccordionPanel, Anchor, Box, Button, Grid, Heading, Image, Paragraph, Text } from 'grommet';
+import { Checkmark, CircleQuestion } from 'grommet-icons';
+import React, { useState } from 'react';
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { CopyText } from '../components/ui/CopyText';
-import { Loading } from '../components/ui/Loading';
 
 
 interface Props {
@@ -15,24 +13,38 @@ interface RouteParams {
 }
 export const AccountPage: React.FC<Props> = ({ ...props }) => {
     const { path } = useRouteMatch()
+    const history = useHistory()
+    const [hasProvider, setHasProvider] = useState(false);
+    const [hasAccount, setHasAccount] = useState(false);
+    const [hasChainId, setHasChainId] = useState(false);
+    const ready = hasProvider && hasAccount && hasChainId
+    const checkAll = () => {
+        checkProvider()
+        checkWallet()
+        checkChainId()
+    }
 
-    const [hasWallet, sethasWallet] = useState(false);
-    const [isCorrectChain, setIsCorrectChain] = useState(false);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if ("ethereum" in window) {
-                sethasWallet(true)
-                if (parseInt(window.ethereum.chainId, 16) === 55577) {
-                    setIsCorrectChain(true)
-                }
-            }
-        }, 2000)
-
-        return () => {
-            clearInterval(interval)
+    const checkProvider = async () => {
+        if ("ethereum" in window) {
+            setHasProvider(true)
         }
-    }, [])
+    }
+
+    const checkWallet = async () => {
+        if ("ethereum" in window) {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            if (accounts.length > 0) {
+                setHasAccount(true)
+            }
+        }
+    }
+    const checkChainId = async () => {
+        if ("ethereum" in window) {
+            if (parseInt(window.ethereum.chainId, 16) === 55577) {
+                setHasChainId(true)
+            }
+        }
+    }
 
 
 
@@ -42,12 +54,13 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
                 <Route path={`${path}/onboard`} exact={true}>
                     <Heading level="2">Kom igang</Heading>
                     <Box>
-                        <Accordion animate={true} multiple={true}>
+                        <Accordion animate={true} multiple={false} gap="medium" >
 
-                            <AccordionPanel label={<Text margin="small" size="large">Sette opp digital lommebok <span role="img" aria-label="fox">🦊</span></Text>} >
-                                <Box margin={{ left: "large" }} pad="small" >
+                            <AccordionPanel label={<Text weight="bold" margin="small" size="large">Sette opp digital lommebok <span role="img" aria-label="fox">🦊</span></Text>} >
+                                <Box margin={{ left: "large" }} pad="small" gap="small" >
 
-                                    <Paragraph fill>1. Installer <Anchor href="https://metamask.io/download.html" target="_blank" label="Metamask"></Anchor>. {hasWallet ? <Checkmark></Checkmark> : <Loading size={20}></Loading>} </Paragraph>
+                                    <Paragraph fill>1. Installer <Anchor href="https://metamask.io/download.html" target="_blank" label="Metamask"></Anchor></Paragraph>
+                                    <Button reverse={true} icon={hasProvider ? <Checkmark></Checkmark> : <CircleQuestion></CircleQuestion>} label={hasProvider ? "Du har en Metamask" : "Test om du har Metamask"} onClick={() => checkProvider()}></Button>
                                     <Paragraph fill>2. Metamask-oppsettet åpner en nettside. Velg «Kom i gang»</Paragraph>
                                     <Image style={{ maxHeight: "200px" }} alignSelf="start" src={require("./../assets/metamask/getStarted.png")} fit="contain"></Image>
                                     <Paragraph fill>3. Velg «Opprett en lommebok»</Paragraph>
@@ -55,11 +68,11 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
                                     <Paragraph fill>4. Velg om du vil dele data med Metamask eller ikke</Paragraph>
                                     <Paragraph fill>5. Sett et passord, godkjenn brukervilkårene og velg «Opprett»</Paragraph>
                                     <Paragraph fill>6. Ta vare på den hemmelige sikkerhetskopifrasen. Dette er ikke essensielt nå siden dette er en prototype. Man står ikke i reel fare for å miste tilgangen til noe.</Paragraph>
-
+                                    <Button reverse={true} icon={hasAccount ? <Checkmark></Checkmark> : <CircleQuestion></CircleQuestion>} label={hasAccount ? "Du har en lommebok" : "Test om du har lommebok"} onClick={() => checkWallet()}></Button>
                                 </Box>
                             </AccordionPanel>
 
-                            <AccordionPanel label={<Text margin="small" size="large">Koble til Brønnøysundregistrene nettverket<span role="img" aria-label="network">🕸</span></Text>}>
+                            <AccordionPanel label={<Text weight="bold" margin="small" size="large">Koble til Brønnøysundregistrene nettverket <span role="img" aria-label="network">🕸</span></Text>}>
                                 <Box margin={{ left: "large" }} pad="small" gap="small" >
                                     <Paragraph fill>Metamask er i utgangspunktet koblet til «Offentlig Ethereum». Her må man ha kryptovalutaen «ether» for å operere. Patentstyrets blokkjedeløsning kjører ikke på offentlig Ethereum, men på en Symfoni Solutions-kjede sammen med Brønnøysundregistrene.</Paragraph>
                                     <Paragraph fill>1. Klikk på «Ethereum hovednettverk»</Paragraph>
@@ -74,20 +87,14 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
                                         <CopyText text="https://e0cteq8qnh:IY2scS2ywMZkinR5m4sS7GBs7EDgm4Mh9F1uUVkmKFI@e0qchlost7-e0zi3w4q2r-rpc.de0-aws.kaleido.io"></CopyText>
                                     </Grid>
                                     <Text>Velg lagre</Text>
-                                    <Text>Oppsettet er ferdig. Lukk nettleservinduet</Text>
+                                    <Button reverse={true} icon={hasChainId ? <Checkmark></Checkmark> : <CircleQuestion></CircleQuestion>} label={hasChainId ? "Du er på riktig nettverk" : "Test om du er på riktig nettverk"} onClick={() => checkChainId()}></Button>
                                 </Box>
-                                <Text>{isCorrectChain ? "Fant rikig" : "feil"}</Text>
                             </AccordionPanel>
 
-                            <AccordionPanel label={<Text margin="small" size="large">Ferdig <span role="img" aria-label="document">🧾</span></Text>}>
-                                <Box margin={{ left: "large" }} pad="small" >
-                                    <Paragraph fill></Paragraph>
-                                </Box>
-                            </AccordionPanel>
+                            <Button size="large" icon={ready ? <Checkmark></Checkmark> : <CircleQuestion></CircleQuestion>} label={ready ? "Du er klar, klikk igjen for gå til Aksjeeierboken" : "Test om alt er riktig"} onClick={() => ready ? history.push("/register/list") : checkAll()} ></Button>
 
                         </Accordion>
                     </Box>
-
                 </Route>
             </Switch>
         </Box >

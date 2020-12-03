@@ -44,7 +44,7 @@ export const Info: React.FC<Props> = ({ capTable, ...pops }) => {
                 const { uuid, active } = await capTableRegistry.instance.info(capTable.address)
                 if (subscribed) {
                     setRegistryData({
-                        uuid: uuid === ethers.constants.HashZero ? "Ikke opprettet" : uuid,
+                        uuid: uuid === ethers.constants.HashZero ? ethers.utils.formatBytes32String("Ikke opprettet") : uuid,
                         active: active
                     })
                 }

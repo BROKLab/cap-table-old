@@ -9,7 +9,7 @@ interface Props {
 }
 
 interface RouteParams {
-    address: string
+
 }
 export const CapTableRegistryPage: React.FC<Props> = ({ ...props }) => {
     const { path } = useRouteMatch()
