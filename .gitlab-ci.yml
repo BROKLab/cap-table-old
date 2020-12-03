@@ -7,7 +7,7 @@ cache:
     - node_modules/
 
 before_script:
-  - npm install
+  - cd frontend && npm install
 
 test:
   stage: test
