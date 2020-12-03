@@ -23,6 +23,6 @@ pages:
     - cp public/index.html public/404.html
   artifacts:
     paths:
-      - public # GitLab pages serve from a 'public' directory
+      - frontend/public # GitLab pages serve from a 'public' directory
   only:
     - master # run on master branch
