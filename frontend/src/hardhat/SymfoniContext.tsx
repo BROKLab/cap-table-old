@@ -77,7 +77,7 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     const [signer, setSigner] = useState<Signer | undefined>(defaultSigner);
     const [provider, setProvider] = useState<providers.Provider | undefined>(defaultProvider);
     const [currentAddress, setCurrentAddress] = useState<string>(defaultCurrentAddress);
-    const [providerPriority, setProviderPriority] = useState<string[]>(["brreg", "hardhat", "web3modal"]);
+    const [providerPriority, setProviderPriority] = useState<string[]>(["web3modal", "brreg", "hardhat"]);
     const [ERC1400, setERC1400] = useState<SymfoniERC1400>(emptyContract);
     const [CapTableQue, setCapTableQue] = useState<SymfoniCapTableQue>(emptyContract);
     const [CapTableRegistry, setCapTableRegistry] = useState<SymfoniCapTableRegistry>(emptyContract);
@@ -192,7 +192,7 @@ export const Symfoni: React.FC<SymfoniProps> = ({
             if (!subscribed || !address) return finishWithContracts("Provider and signer, without address.")
             setCurrentAddress(address)
 
-            return finish("Completed Symfoni context initialization.")
+            return finishWithContracts("Completed Symfoni context initialization.")
         };
         doAsync();
         return () => { subscribed = false }
