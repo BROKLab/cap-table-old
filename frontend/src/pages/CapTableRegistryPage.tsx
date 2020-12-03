@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { List } from '../components/Registry/List';
 import { Loading } from '../components/ui/Loading';
-import { CapTableRegistryContext } from '../hardhat/HardhatContext';
+import { CapTableRegistryContext } from '../hardhat/SymfoniContext';
 
 interface Props {
 }

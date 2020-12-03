@@ -3,7 +3,7 @@ import { Box, Button } from 'grommet';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { Modal } from '../ui/Modal';
 import { Transfer } from './Transfer';
-import { HardhatContext } from '../../hardhat/HardhatContext';
+import { SymfoniContext } from '../../hardhat/SymfoniContext';
 import { BatchIssue } from './BatchIssue';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const Actions: React.FC<Props> = ({ ...props }) => {
-    const { init } = useContext(HardhatContext)
+    const { init } = useContext(SymfoniContext)
     const [showTransfers, setShowTransfers] = useState(false);
     const [showIssue, setShowIssue] = useState(false);
 

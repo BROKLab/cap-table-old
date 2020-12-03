@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { Box, Grid, Text } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
-import { CapTableQueContext, CapTableRegistryContext, CurrentAddressContext } from '../../hardhat/HardhatContext';
+import { CapTableQueContext, CapTableRegistryContext, CurrentAddressContext } from '../../hardhat/SymfoniContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { CapTableQueDetails } from './Que/CapTableQueDetails';
 
@@ -65,7 +65,7 @@ export const Info: React.FC<Props> = ({ capTable, ...pops }) => {
             {registryData &&
                 <Grid columns={["small", "flex"]}>
                     <Text >Orginisasjonsnummer</Text>
-                    <Text weight="bold">{registryData.uuid}</Text>
+                    <Text weight="bold">{ethers.utils.parseBytes32String(registryData.uuid)}</Text>
                 </Grid>
             }
             {registryData &&

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, Button, Grid, Text, TextInput } from 'grommet';
 import { CapTableQue } from '../../hardhat/typechain/CapTableQue';
-import { CurrentAddressContext, HardhatContext } from '../../hardhat/HardhatContext';
+import { CurrentAddressContext, SymfoniContext } from '../../hardhat/SymfoniContext';
 import { Checkmark, Clear } from 'grommet-icons';
 import { ethers } from 'ethers';
 
@@ -13,7 +13,7 @@ interface Props {
 export const ProcessQue: React.FC<Props> = ({ ...props }) => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [currentAddress] = useContext(CurrentAddressContext)
-    const { init } = useContext(HardhatContext)
+    const { init } = useContext(SymfoniContext)
     const [reason, setReason] = useState("");
 
     useEffect(() => {

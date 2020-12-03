@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from "react-hook-form";
 import { useHistory } from 'react-router-dom';
 import { SpinnerDiamond } from 'spinners-react/lib/esm/SpinnerDiamond';
-import { CapTableQueContext, ERC1400Context, HardhatContext } from "../../hardhat/HardhatContext";
+import { CapTableQueContext, ERC1400Context } from "../../hardhat/SymfoniContext";
 import { formatCurrency } from '../../utils/numbers';
 import { removePassword } from '../../utils/passwordBlockAPI';
 
@@ -111,7 +111,6 @@ export const CapTableCreate: React.FC<Props> = () => {
     const [isSearchingBrreg, setIsSearchingBrreg] = useState(false);
     const erc1400 = useContext(ERC1400Context)
     const capTableQue = useContext(CapTableQueContext)
-    const { init } = useContext(HardhatContext)
     const orgWatch = watch("org")
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -174,7 +173,7 @@ export const CapTableCreate: React.FC<Props> = () => {
         if (!capTableQue.instance) throw Error("Aksjeregister køen er ikke lastet inn.")
         console.debug("Submitting", data)
         if (!erc1400.factory) {
-            return await init()
+            throw Error("ERC1400 factory not initiated with a signer")
         }
         if (!data.org) {
             throw Error("Data not defined.")

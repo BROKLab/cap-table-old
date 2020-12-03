@@ -84,6 +84,7 @@ export const List: React.FC<Props> = ({ ...props }) => {
                     {
                         property: 'address',
                         header: <Text>Addresse</Text>,
+                        primary: true,
                         render: (data) => FormatAddress({ address: data.address })
                     },
                     {

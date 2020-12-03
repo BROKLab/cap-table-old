@@ -4,7 +4,7 @@ import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 import { Details } from '../components/CapTable/Details';
 import { OnBoard } from '../components/CapTable/OnBoard';
 import { Loading } from '../components/ui/Loading';
-import { ERC1400Context } from '../hardhat/HardhatContext';
+import { ERC1400Context } from '../hardhat/SymfoniContext';
 
 interface Props {
 }

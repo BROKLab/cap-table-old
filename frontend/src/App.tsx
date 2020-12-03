@@ -1,7 +1,7 @@
 import { Box, Footer, Grommet, Text, Main, Paragraph } from "grommet";
 import React from 'react';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Hardhat } from "./hardhat/HardhatContext";
+import { Symfoni } from "./hardhat/SymfoniContext";
 
 import { Navigation } from './components/ui/Navigation';
 import { Theme } from "./assets/Theme";
@@ -17,7 +17,7 @@ function App() {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Grommet theme={Theme}>
-        <Hardhat autoInit={true} showLoading={true}>
+        <Symfoni autoInit={true} showLoading={true}>
           <Box height={{ min: "100vh" }}>
             {/* Navigation */}
             <Navigation></Navigation>
@@ -42,7 +42,7 @@ function App() {
             </Footer>
 
           </Box>
-        </Hardhat>
+        </Symfoni>
       </Grommet>
     </BrowserRouter >
   );
