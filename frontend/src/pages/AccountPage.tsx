@@ -1,7 +1,9 @@
 import { Accordion, AccordionPanel, Anchor, Box, Button, Heading, Image, Paragraph, Text } from 'grommet';
+import { Checkmark } from 'grommet-icons';
 import React, { useEffect, useState } from 'react';
 import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { setInterval } from 'timers';
+import { Loading } from '../components/ui/Loading';
 
 interface Props {
 }
@@ -15,15 +17,14 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
         {
             active: true,
             step: 0,
-            title: "1. Sette opp digital lommebok 🦊",
+            title: "Sette opp digital lommebok 🦊",
             content: () => (
                 <Box>
-                    <Paragraph>Installer <Anchor href="https://metamask.io/download.html" target="_blank" label="Metamask"></Anchor></Paragraph>
-
-                    <Paragraph>Metamask-oppsettet åpner en nettside. Velg «Kom i gang»</Paragraph>{hasWallet ? "Har wllate" : "None"}
-                    <Image src={require("./../assets/metamask/getStarted.png")} fit="contain"></Image>
-                    <Paragraph>Velg «Opprett en lommebok»</Paragraph>
-                    <Image src={require("./../assets/metamask/createWallet.png")} fit="contain"></Image>
+                    <Paragraph fill>1. Installer <Anchor href="https://metamask.io/download.html" target="_blank" label="Metamask"></Anchor>. (søker etter Metamask {hasWallet ? <Checkmark></Checkmark> : <Loading size={20}></Loading>}) </Paragraph>
+                    <Paragraph fill>2. Metamask-oppsettet åpner en nettside. Velg «Kom i gang»</Paragraph>
+                    <Image style={{ maxHeight: "200px" }} alignSelf="start" src={require("./../assets/metamask/getStarted.png")} fit="contain"></Image>
+                    <Paragraph fill>3. Velg «Opprett en lommebok»</Paragraph>
+                    <Image style={{ maxHeight: "200px" }} alignSelf="start" src={require("./../assets/metamask/createWallet.png")} fit="contain"></Image>
                     {isCorrectChain ? "Correctchain" : "No chain"}
                 </Box>
             )
