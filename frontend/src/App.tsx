@@ -10,6 +10,7 @@ import { CapTableCreate } from "./components/CapTable/CapTableCreate";
 import { CapTablePage } from "./pages/CapTablePage";
 import { CapTableQuePage } from "./pages/CapTableQuePage";
 import { CapTableRegistryPage } from "./pages/CapTableRegistryPage";
+import { AccountPage } from "./pages/AccountPage";
 
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Grommet theme={Theme}>
-        <Symfoni autoInit={true} showLoading={true}>
+        <Symfoni autoInit={false} showLoading={true}>
           <Box height={{ min: "100vh" }}>
             {/* Navigation */}
             <Navigation></Navigation>
@@ -29,7 +30,7 @@ function App() {
                 <Route path="/capTable/:address" component={CapTablePage} />
                 <Route path="/que" component={CapTableQuePage} />
                 <Route path="/register" component={CapTableRegistryPage} />
-                <Route path="/account" component={CapTableRegistryPage} />
+                <Route path="/account" component={AccountPage} />
               </Switch>
             </Main>
             {/* footer */}
