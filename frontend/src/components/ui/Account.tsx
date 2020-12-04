@@ -64,9 +64,19 @@ export const Account: React.FC<Props> = () => {
                 </Box>
             }
             {SHOW_PROVIDER_SWITCH !== "true" &&
-                <Link to="/account/onboard">
-                    <Button size="small" label="Logg inn" hoverIndicator focusIndicator={false} />
-                </Link>
+                <Box align="center">
+                    {!address && (
+                        <Link to="/account/onboard">
+                            <Button size="small" label="Logg inn" hoverIndicator focusIndicator={false} />
+                        </Link>
+                    )}
+                    {address && (
+                        <Text>Innlogget som {address.substr(0, 4)}..</Text>
+                    )}
+                </Box>
+
+
+
             }
         </Box>
     )
