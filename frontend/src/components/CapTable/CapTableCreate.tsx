@@ -244,8 +244,11 @@ export const CapTableCreate: React.FC<Props> = () => {
                                     <Text size="xsmall">Kapital</Text>
                                     <Text size="xsmall">{formatCurrency(orgWatch.Kapital)}</Text>
 
+                                    <Text size="xsmall">Pålydene</Text>
+                                    <Text size="xsmall">{formatCurrency(orgWatch.Kapital / orgWatch.Aksjer)}</Text>
+
                                     <Text size="xsmall">Aksjer</Text>
-                                    <Text size="xsmall">{orgWatch.Kapital / orgWatch.Aksjer}</Text>
+                                    <Text size="xsmall">{orgWatch.Aksjer}</Text>
 
                                     <Text size="xsmall">Vedtektsdato</Text>
                                     <Text size="xsmall">{orgWatch.Vedtektsdato}</Text>
