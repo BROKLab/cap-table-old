@@ -17,7 +17,7 @@ export const CapTablePage: React.FC<Props> = ({ ...props }) => {
     const { path } = useRouteMatch()
 
     const erc1400 = useContext(ERC1400Context);
-    const capTable = erc1400.factory?.attach(address)
+    const capTable = erc1400.instance?.attach(address)
 
     return (
         <Box>

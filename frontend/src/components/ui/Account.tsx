@@ -9,7 +9,6 @@ import { CurrentAddressContext, SymfoniContext } from './../../hardhat/SymfoniCo
 interface Props { }
 
 const SHOW_PROVIDER_SWITCH = localStorage.getItem("PROVIDER_SWITCH ") /* || process.env.NODE_ENV === "development" ? "true" : "false" */
-console.log(SHOW_PROVIDER_SWITCH)
 export const Account: React.FC<Props> = () => {
 
     const [address] = useContext(CurrentAddressContext)

@@ -6,12 +6,12 @@ import React, { useEffect, useState } from "react";
 import Web3Modal, { IProviderOptions } from "web3modal";
 import { ERC1400 } from "./typechain/ERC1400";
 import { ERC1400__factory } from "./typechain/factories/ERC1400__factory";
-import CapTableRegistryDeployment from "./deployments/brreg/CapTableRegistry.json";
-import { CapTableRegistry } from "./typechain/CapTableRegistry";
-import { CapTableRegistry__factory } from "./typechain/factories/CapTableRegistry__factory";
 import CapTableQueDeployment from "./deployments/brreg/CapTableQue.json";
 import { CapTableQue } from "./typechain/CapTableQue";
 import { CapTableQue__factory } from "./typechain/factories/CapTableQue__factory";
+import CapTableRegistryDeployment from "./deployments/brreg/CapTableRegistry.json";
+import { CapTableRegistry } from "./typechain/CapTableRegistry";
+import { CapTableRegistry__factory } from "./typechain/factories/CapTableRegistry__factory";
 
 const emptyContract = {
     instance: undefined,
@@ -32,8 +32,8 @@ const defaultSymfoniContext: SymfoniContextInterface = {
 };
 export const SymfoniContext = React.createContext<SymfoniContextInterface>(defaultSymfoniContext);
 export const ERC1400Context = React.createContext<SymfoniERC1400>(emptyContract);
-export const CapTableRegistryContext = React.createContext<SymfoniCapTableRegistry>(emptyContract);
 export const CapTableQueContext = React.createContext<SymfoniCapTableQue>(emptyContract);
+export const CapTableRegistryContext = React.createContext<SymfoniCapTableRegistry>(emptyContract);
 
 export interface SymfoniContextInterface {
     init: (provider?: string) => void;
@@ -54,14 +54,14 @@ export interface SymfoniERC1400 {
     factory?: ERC1400__factory;
 }
 
-export interface SymfoniCapTableRegistry {
-    instance?: CapTableRegistry;
-    factory?: CapTableRegistry__factory;
-}
-
 export interface SymfoniCapTableQue {
     instance?: CapTableQue;
     factory?: CapTableQue__factory;
+}
+
+export interface SymfoniCapTableRegistry {
+    instance?: CapTableRegistry;
+    factory?: CapTableRegistry__factory;
 }
 
 export const Symfoni: React.FC<SymfoniProps> = ({
@@ -73,15 +73,14 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     const [currentHardhatProvider, setCurrentHardhatProvider] = useState("");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<string[]>([]);
-    const [/* providerName */, setProviderName] = useState<string>();
     const [signer, setSigner] = useState<Signer | undefined>(defaultSigner);
     const [provider, setProvider] = useState<providers.Provider | undefined>(defaultProvider);
     const [currentAddress, setCurrentAddress] = useState<string>(defaultCurrentAddress);
-    const [fallbackProvider] = useState<string | undefined>(undefined);
+    const [fallbackProvider] = useState<string | undefined>("brreg");
     const [providerPriority, setProviderPriority] = useState<string[]>(["web3modal", "brreg", "hardhat"]);
     const [ERC1400, setERC1400] = useState<SymfoniERC1400>(emptyContract);
-    const [CapTableRegistry, setCapTableRegistry] = useState<SymfoniCapTableRegistry>(emptyContract);
     const [CapTableQue, setCapTableQue] = useState<SymfoniCapTableQue>(emptyContract);
+    const [CapTableRegistry, setCapTableRegistry] = useState<SymfoniCapTableRegistry>(emptyContract);
     useEffect(() => {
         if (messages.length > 0)
             console.debug(messages.pop())
@@ -142,17 +141,12 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return provider ? { provider, hardhatProviderName } : undefined
     };
     const getSigner = async (_provider: providers.Provider, hardhatProviderName: string): Promise<Signer | undefined> => {
-        switch (_provider.constructor.name) {
-            case "Web3Provider":
+        switch (hardhatProviderName) {
+            case "web3modal":
                 const web3provider = _provider as ethers.providers.Web3Provider
                 return await web3provider.getSigner()
-            case "JsonRpcProvider":
-                switch (hardhatProviderName) {
-                    case "hardhat":
-                        return ethers.Wallet.fromMnemonic("test test test test test test test test test test test junk").connect(_provider)
-                    default:
-                        return undefined
-                }
+            case "hardhat":
+                return ethers.Wallet.fromMnemonic("test test test test test test test test test test test junk").connect(_provider)
             default:
                 return undefined
         }
@@ -176,8 +170,8 @@ export const Symfoni: React.FC<SymfoniProps> = ({
             }
             const finishWithContracts = (text: string) => {
                 setERC1400(getERC1400(_provider, _signer))
-                setCapTableRegistry(getCapTableRegistry(_provider, _signer))
                 setCapTableQue(getCapTableQue(_provider, _signer))
+                setCapTableRegistry(getCapTableRegistry(_provider, _signer))
                 finish(text)
             }
             if (!autoInit && initializeCounter === 0) return finish("Auto init turned off.")
@@ -187,10 +181,8 @@ export const Symfoni: React.FC<SymfoniProps> = ({
 
             if (!subscribed || !providerObject) return finish("No provider or signer.")
             const _provider = providerObject.provider
-            const _providerName = _provider.constructor.name;
             setProvider(_provider)
-            setProviderName(_providerName)
-            setMessages(old => [...old, "Useing " + _providerName + " from " + providerObject.hardhatProviderName])
+            setMessages(old => [...old, "Useing " + providerObject.hardhatProviderName])
             setCurrentHardhatProvider(providerObject.hardhatProviderName)
             const _signer = await getSigner(_provider, providerObject.hardhatProviderName);
 
@@ -209,21 +201,10 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     }, [initializeCounter])
 
     const getERC1400 = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = undefined
+        let instance = ERC1400__factory.connect(ethers.constants.AddressZero, _provider)
         const contract: SymfoniERC1400 = {
             instance: instance,
             factory: _signer ? new ERC1400__factory(_signer) : undefined,
-        }
-        return contract
-    }
-        ;
-    const getCapTableRegistry = (_provider: providers.Provider, _signer?: Signer) => {
-
-        const contractAddress = CapTableRegistryDeployment.receipt.contractAddress
-        const instance = _signer ? CapTableRegistry__factory.connect(contractAddress, _signer) : CapTableRegistry__factory.connect(contractAddress, _provider)
-        const contract: SymfoniCapTableRegistry = {
-            instance: instance,
-            factory: _signer ? new CapTableRegistry__factory(_signer) : undefined,
         }
         return contract
     }
@@ -235,6 +216,17 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         const contract: SymfoniCapTableQue = {
             instance: instance,
             factory: _signer ? new CapTableQue__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getCapTableRegistry = (_provider: providers.Provider, _signer?: Signer) => {
+
+        const contractAddress = CapTableRegistryDeployment.receipt.contractAddress
+        const instance = _signer ? CapTableRegistry__factory.connect(contractAddress, _signer) : CapTableRegistry__factory.connect(contractAddress, _provider)
+        const contract: SymfoniCapTableRegistry = {
+            instance: instance,
+            factory: _signer ? new CapTableRegistry__factory(_signer) : undefined,
         }
         return contract
     }
@@ -255,8 +247,8 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                 <SignerContext.Provider value={[signer, setSigner]}>
                     <CurrentAddressContext.Provider value={[currentAddress, setCurrentAddress]}>
                         <ERC1400Context.Provider value={ERC1400}>
-                            <CapTableRegistryContext.Provider value={CapTableRegistry}>
-                                <CapTableQueContext.Provider value={CapTableQue}>
+                            <CapTableQueContext.Provider value={CapTableQue}>
+                                <CapTableRegistryContext.Provider value={CapTableRegistry}>
                                     {showLoading && loading ?
                                         props.loadingComponent
                                             ? props.loadingComponent
@@ -267,8 +259,8 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                                             </div>
                                         : props.children
                                     }
-                                </CapTableQueContext.Provider >
-                            </CapTableRegistryContext.Provider >
+                                </CapTableRegistryContext.Provider >
+                            </CapTableQueContext.Provider >
                         </ERC1400Context.Provider >
                     </CurrentAddressContext.Provider>
                 </SignerContext.Provider>
