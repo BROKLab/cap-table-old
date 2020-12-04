@@ -88,8 +88,9 @@ export const Symfoni: React.FC<SymfoniProps> = ({
 
     const getProvider = async (): Promise<{ provider: providers.Provider, hardhatProviderName: string } | undefined> => {
         let hardhatProviderName = "Not set";
-        let _providerPriority = providerPriority
+        let _providerPriority = [...providerPriority]
         // Fallback provider
+        console.log(fallbackProvider, autoInit, initializeCounter)
         if (fallbackProvider && autoInit && initializeCounter === 0) {
             if (localStorage.getItem("WEB3_CONNECT_CACHED_PROVIDER") === null) {
                 _providerPriority = _providerPriority.sort((a, b) => {
@@ -97,6 +98,7 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                 })
             }
         }
+        console.log(_providerPriority)
         const provider = await _providerPriority.reduce(async (maybeProvider: Promise<providers.Provider | undefined>, providerIdentification) => {
             let foundProvider = await maybeProvider
             if (foundProvider) {
@@ -164,6 +166,7 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     useEffect(() => {
         let subscribed = true
         const doAsync = async () => {
+            console.debug("initializeCounter", initializeCounter)
             const finish = (text: string) => {
                 setLoading(false)
                 setMessages(old => [...old, text])

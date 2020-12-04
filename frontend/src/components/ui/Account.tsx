@@ -8,7 +8,7 @@ import { CurrentAddressContext, SymfoniContext } from './../../hardhat/SymfoniCo
 
 interface Props { }
 
-const SHOW_PROVIDER_SWITCH = localStorage.getItem("PROVIDER_SWITCH ") /* || process.env.NODE_ENV === "development" ? "true" : "false" */
+const SHOW_PROVIDER_SWITCH = localStorage.getItem("PROVIDER_SWITCH") === "true" /* || process.env.NODE_ENV === "development" ? "true" : "false" */
 export const Account: React.FC<Props> = () => {
 
     const [address] = useContext(CurrentAddressContext)
@@ -41,7 +41,7 @@ export const Account: React.FC<Props> = () => {
 
     return (
         <Box gap="small" >
-            {SHOW_PROVIDER_SWITCH === "true" &&
+            {SHOW_PROVIDER_SWITCH &&
                 <Box>
                     <Grid gap="small" columns={["auto", "flex"]}>
                         <Select
@@ -62,7 +62,7 @@ export const Account: React.FC<Props> = () => {
                     </Box>
                 </Box>
             }
-            {SHOW_PROVIDER_SWITCH !== "true" &&
+            {!SHOW_PROVIDER_SWITCH &&
                 <Box align="center">
                     {!address && (
                         <Link to="/account/onboard">

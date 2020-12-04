@@ -1,8 +1,9 @@
 import { BytesLike, ethers } from 'ethers';
 import { Box, Button, Grid, Select, Text, TextInput } from 'grommet';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
+import { SignerContext, SymfoniContext } from '../../hardhat/SymfoniContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 
 interface Props {
@@ -39,7 +40,8 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
     const [partitions, setPartitions] = useState<BytesLike[]>(DEFAULT_PARTITIONS);
     const [newPartition, setNewPartition] = useState("");
     const [useDefaultPartitions, setUseDefaultPartitions] = useState(true);
-    // const [partitionsIsHidden, setPartitionsIsHidden] =  useState(true)
+    const [signer] = useContext(SignerContext)
+    const { init } = useContext(SymfoniContext)
 
     // Get partitions
     useEffect(() => {
@@ -56,6 +58,8 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
 
     const onSubmit = async (data: FormData) => {
         console.log("onSubmit=>", data);
+        if (!signer)
+            return init()
         // ISSUE SHARES
         await createArrayWithNumbers(rows)
             .reduce(async (prev, rowNr) => {

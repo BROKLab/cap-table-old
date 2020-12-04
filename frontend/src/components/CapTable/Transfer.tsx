@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Button, Select, TextInput, Text } from 'grommet';
 import { BigNumberish, BytesLike, ethers } from 'ethers';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
+import { SignerContext, SymfoniContext } from '../../hardhat/SymfoniContext';
 
 interface Props {
     capTable: ERC1400
@@ -14,7 +15,8 @@ export const Transfer: React.FC<Props> = ({ ...props }) => {
     const [partition, setPartition] = useState<BytesLike>();
     const [to, setTo] = useState<string>("");
     const [amount, setAmount] = useState<BigNumberish>(ethers.constants.Zero);
-
+    const [signer] = useContext(SignerContext)
+    const { init } = useContext(SymfoniContext)
     // Get partitions
     useEffect(() => {
         let subscribed = true
@@ -29,6 +31,8 @@ export const Transfer: React.FC<Props> = ({ ...props }) => {
     }, [props.capTable])
 
     const transfer = async () => {
+        if (!signer)
+            return init()
         if (!partition) return alert("Sett aksjeklasse")
         if (!to) return alert("Sett til addresse")
         if (amount === ethers.constants.Zero) return alert("Kan ikke overføre 0 beløp")
