@@ -46,8 +46,6 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
         }
     }
 
-
-
     return (
         <Box>
             <Switch>
@@ -85,6 +83,8 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
                                         <CopyText text="Brreg"></CopyText>
                                         <Text>NY RPC-URL:</Text>
                                         <CopyText text="https://e0cteq8qnh:IY2scS2ywMZkinR5m4sS7GBs7EDgm4Mh9F1uUVkmKFI@e0qchlost7-e0zi3w4q2r-rpc.de0-aws.kaleido.io"></CopyText>
+                                        <Text>Blokkjede:</Text>
+                                        <CopyText text="55577"></CopyText>
                                     </Grid>
                                     <Text>Velg lagre</Text>
                                     <Button reverse={true} icon={hasChainId ? <Checkmark></Checkmark> : <CircleQuestion></CircleQuestion>} label={hasChainId ? "Du er på riktig nettverk" : "Test om du er på riktig nettverk"} onClick={() => checkChainId()}></Button>

@@ -26,6 +26,7 @@ const config: HardhatUserConfig = {
   react: {
     providerPriority: ["web3modal", "brreg", "hardhat"],
     handle: ["ERC1400", "CapTableQue", "CapTableRegistry"],
+    fallbackProvider: "brreg",
   },
   networks: {
     brreg: {
