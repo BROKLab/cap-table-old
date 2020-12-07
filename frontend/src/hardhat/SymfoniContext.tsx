@@ -6,10 +6,10 @@ import React, { useEffect, useState } from "react";
 import Web3Modal, { IProviderOptions } from "web3modal";
 import { ERC1400 } from "./typechain/ERC1400";
 import { ERC1400__factory } from "./typechain/factories/ERC1400__factory";
-import CapTableQueDeployment from "./deployments/localhost/CapTableQue.json";
+import CapTableQueDeployment from "./deployments/brreg/CapTableQue.json";
 import { CapTableQue } from "./typechain/CapTableQue";
 import { CapTableQue__factory } from "./typechain/factories/CapTableQue__factory";
-import CapTableRegistryDeployment from "./deployments/localhost/CapTableRegistry.json";
+import CapTableRegistryDeployment from "./deployments/brreg/CapTableRegistry.json";
 import { CapTableRegistry } from "./typechain/CapTableRegistry";
 import { CapTableRegistry__factory } from "./typechain/factories/CapTableRegistry__factory";
 

@@ -49,7 +49,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
             const partitionsBytes32 = await props.capTable.totalPartitions().catch(() => [])
             try {
                 if (subscribed) {
-                    setPartitions(old => [...old, ...partitionsBytes32])
+                    setPartitions(old => [...old, ...partitionsBytes32.filter(a => old.indexOf(a) === -1)])
                 }
             } catch (error) {
                 // console.error(error)
@@ -88,8 +88,10 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
     }
 
     const handleNewPartition = () => {
-        setPartitions(old => [...old, ethers.utils.formatBytes32String(newPartition)])
-        setNewPartition("")
+        if (partitions.indexOf(newPartition) === -1) {
+            setPartitions(old => [...old, ...[ethers.utils.formatBytes32String(newPartition)]])
+            setNewPartition("")
+        }
     }
 
     const COLUMNS = { count: 3, size: "auto" }
@@ -144,6 +146,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
                                                 return option
                                             }}
                                             value={value}
+                                            multiple={false}
                                         />}
                                         name={`partition[${rowNr}]`}
                                         control={control}

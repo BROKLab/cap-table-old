@@ -1,10 +1,12 @@
 
 
 import { ethers } from 'ethers';
-import { Box, Button, Grid, Select, Text } from 'grommet';
+import { Box, Button, Grid, Paragraph, Select, Text, Image } from 'grommet';
+import { User } from 'grommet-icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CurrentAddressContext, SymfoniContext } from './../../hardhat/SymfoniContext';
+import { Modal } from './Modal';
 
 interface Props { }
 
@@ -39,6 +41,7 @@ export const Account: React.FC<Props> = () => {
         }
     }, [address])
 
+    const [showDisconnect, setShowDisconnect] = useState(false);
     return (
         <Box gap="small" >
             {SHOW_PROVIDER_SWITCH &&
@@ -70,13 +73,21 @@ export const Account: React.FC<Props> = () => {
                         </Link>
                     )}
                     {address && (
-                        <Text>Innlogget som {address.substr(0, 4)}..</Text>
+                        <Grid columns={["flex", "flex", "flex"]} gap="small">
+                            <Button size="small" icon={<User></User>} label={`${address.substr(0, 4)}..`} hoverIndicator={false} style={{ cursor: "not-allowed" }}></Button>
+                            <Button size="small" label={"Logg ut"} onClick={() => setShowDisconnect(true)}></Button>
+                        </Grid>
                     )}
                 </Box>
-
-
-
             }
+            <Modal setShow={setShowDisconnect} show={showDisconnect}>
+                <Box margin="small">
+                    <Paragraph fill>Gå inn i Metamask.</Paragraph>
+                    <Paragraph fill>Klikk på der det står tilkoblet</Paragraph>
+                    <Paragraph fill>Koble fra den addressen du ønsker</Paragraph>
+                    <Image style={{ maxHeight: "300px" }} alignSelf="center" src={require("./../../assets/metamask/disconnect.png")} fit="contain"></Image>
+                </Box>
+            </Modal>
         </Box>
     )
 }

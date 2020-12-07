@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BatchIssue } from '../components/CapTable/BatchIssue';
 import { CapTableCreate } from '../components/CapTable/CapTableCreate';
+import { Loading } from '../components/ui/Loading';
 import { ERC1400Context, SignerContext, SymfoniContext } from '../hardhat/SymfoniContext';
 import { Transaction } from '../utils/ethers-helpers';
 
@@ -28,6 +29,7 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
     const totalTransactions = Object.values(transactions).flat(1).length
     const [capTableAddress, setcapTableAddress] = useState(ethers.constants.AddressZero);
     const capTable = useContext(ERC1400Context)
+    const [deploying, setDeploying] = useState(false);
 
     const history = useHistory()
 
@@ -48,6 +50,7 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
 
     const deploy = async () => {
         if (!signer) return init()
+        setDeploying(true)
         let deployedContract: string | undefined = undefined
         await Object.values(transactions).reduce(async (prev, txs) => {
             await prev
@@ -60,14 +63,7 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
             }
             return Promise.resolve()
         }, Promise.resolve())
-        // await Promise.all(Object.values(transactions).flat().map(async (tx) => {
-        //     const txRes = await signer.sendTransaction(tx)
-        //     const receipt = await txRes.wait()
-        //     console.log(receipt.contractAddress)
-        //     if (receipt.contractAddress) {
-        //         deployedContract = receipt.contractAddress
-        //     }
-        // }))
+        setDeploying(false)
         if (deployedContract) {
             history.push("/captable/" + deployedContract)
         }
@@ -92,11 +88,17 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
                 </AccordionPanel>
                 <AccordionPanel label="3. Bekreft" onClickCapture={() => setStep(STEP.CONFIRM)}>
                     <Box margin="small">
-                        <Paragraph fill>Det kreves {totalTransactions} signereing for å opprette dette selskapet.</Paragraph>
+                        <Paragraph fill>Det kreves {totalTransactions} signereing for å opprette dette selskapet og utstede aksjene. Metamask vil forslå signering for deg.</Paragraph>
                     </Box>
                 </AccordionPanel>
             </Accordion>
-            <Button size="large" label="Opprett aksjeeierbok" disabled={step !== STEP.CONFIRM || transactions[0].length !== 2} onClick={() => deploy()}></Button>
+            <Button size="large" label="Opprett aksjeeierbok" disabled={step !== STEP.CONFIRM || transactions[0].length !== 2 || deploying} onClick={() => deploy()}></Button>
+            {deploying &&
+                <Box align="center" >
+                    <Loading size={50}></Loading>
+
+                </Box>
+            }
         </Box >
     )
 }
