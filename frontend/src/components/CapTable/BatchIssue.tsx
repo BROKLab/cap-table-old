@@ -67,7 +67,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
         const txData = "0x11"
         if (props.transactions) {
             const txs = await Promise.all(createArrayWithNumbers(rows).map(rowNr => {
-                return props.capTable.populateTransaction.issueByPartition(data.partition[rowNr], data.address[rowNr], ethers.utils.parseEther(data.amount[rowNr]), txData)
+                return props.capTable.populateTransaction.issueByPartition(data.partition[rowNr], data.address[rowNr], ethers.utils.parseEther(data.amount[rowNr]), txData, { gasLimit: 254955 * 1.2 })
             }))
             return props.transactions(txs)
         } else {

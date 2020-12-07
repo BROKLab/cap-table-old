@@ -49,14 +49,25 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
     const deploy = async () => {
         if (!signer) return init()
         let deployedContract: string | undefined = undefined
-        await Promise.all(Object.values(transactions).flat().map(async (tx) => {
-            const txRes = await signer.sendTransaction(tx)
-            const receipt = await txRes.wait()
-            console.log(receipt.contractAddress)
-            if (receipt.contractAddress) {
-                deployedContract = receipt.contractAddress
+        await Object.values(transactions).reduce(async (prev, txs) => {
+            await prev
+            for (const tx of txs) {
+                const txRes = await signer.sendTransaction(tx)
+                const receipt = await txRes.wait()
+                if (receipt.contractAddress) {
+                    deployedContract = receipt.contractAddress
+                }
             }
-        }))
+            return Promise.resolve()
+        }, Promise.resolve())
+        // await Promise.all(Object.values(transactions).flat().map(async (tx) => {
+        //     const txRes = await signer.sendTransaction(tx)
+        //     const receipt = await txRes.wait()
+        //     console.log(receipt.contractAddress)
+        //     if (receipt.contractAddress) {
+        //         deployedContract = receipt.contractAddress
+        //     }
+        // }))
         if (deployedContract) {
             history.push("/captable/" + deployedContract)
         }
