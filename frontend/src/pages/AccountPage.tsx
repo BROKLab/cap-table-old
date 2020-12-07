@@ -1,8 +1,9 @@
 import { Accordion, AccordionPanel, Anchor, Box, Button, Grid, Heading, Image, Paragraph, Text } from 'grommet';
 import { Checkmark, CircleQuestion } from 'grommet-icons';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { CopyText } from '../components/ui/CopyText';
+import { SymfoniContext } from '../hardhat/SymfoniContext';
 
 
 interface Props {
@@ -17,6 +18,7 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
     const [hasProvider, setHasProvider] = useState(false);
     const [hasAccount, setHasAccount] = useState(false);
     const [hasChainId, setHasChainId] = useState(false);
+    const { init } = useContext(SymfoniContext)
     const ready = hasProvider && hasAccount && hasChainId
     const checkAll = () => {
         checkProvider()
@@ -46,6 +48,13 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
         }
     }
 
+    const handleCheckAll = async () => {
+        if (ready) {
+            init()
+            ready ? history.push("/register/list") : checkAll()
+        }
+    }
+
     return (
         <Box>
             <Switch>
@@ -66,6 +75,8 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
                                     <Paragraph fill>4. Velg om du vil dele data med Metamask eller ikke</Paragraph>
                                     <Paragraph fill>5. Sett et passord, godkjenn brukervilkårene og velg «Opprett»</Paragraph>
                                     <Paragraph fill>6. Ta vare på den hemmelige sikkerhetskopifrasen. Dette er ikke essensielt nå siden dette er en prototype. Man står ikke i reel fare for å miste tilgangen til noe.</Paragraph>
+                                    <Paragraph fill>7. Sjekk om du har en lommebok, en vindu vil poppe opp fra Metamask hvor du kan gi applikasjonen tilgang til å lese offentlig addresse til lommeboken.</Paragraph>
+                                    <Image style={{ maxHeight: "200px" }} alignSelf="start" src={require("./../assets/metamask/connect.png")} fit="contain"></Image>
                                     <Button reverse={true} icon={hasAccount ? <Checkmark></Checkmark> : <CircleQuestion></CircleQuestion>} label={hasAccount ? "Du har en lommebok" : "Test om du har lommebok"} onClick={() => checkWallet()}></Button>
                                 </Box>
                             </AccordionPanel>
@@ -91,7 +102,7 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
                                 </Box>
                             </AccordionPanel>
 
-                            <Button size="large" icon={ready ? <Checkmark></Checkmark> : <CircleQuestion></CircleQuestion>} label={ready ? "Du er klar, klikk igjen for gå til Aksjeeierboken" : "Test om alt er riktig"} onClick={() => ready ? history.push("/register/list") : checkAll()} ></Button>
+                            <Button size="large" icon={ready ? <Checkmark></Checkmark> : <CircleQuestion></CircleQuestion>} label={ready ? "Du er klar, klikk igjen for gå til Aksjeeierboken" : "Test om alt er riktig"} onClick={() => handleCheckAll()} ></Button>
 
                         </Accordion>
                     </Box>

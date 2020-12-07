@@ -6,10 +6,10 @@ import React, { useEffect, useState } from "react";
 import Web3Modal, { IProviderOptions } from "web3modal";
 import { ERC1400 } from "./typechain/ERC1400";
 import { ERC1400__factory } from "./typechain/factories/ERC1400__factory";
-import CapTableQueDeployment from "./deployments/brreg/CapTableQue.json";
+import CapTableQueDeployment from "./deployments/localhost/CapTableQue.json";
 import { CapTableQue } from "./typechain/CapTableQue";
 import { CapTableQue__factory } from "./typechain/factories/CapTableQue__factory";
-import CapTableRegistryDeployment from "./deployments/brreg/CapTableRegistry.json";
+import CapTableRegistryDeployment from "./deployments/localhost/CapTableRegistry.json";
 import { CapTableRegistry } from "./typechain/CapTableRegistry";
 import { CapTableRegistry__factory } from "./typechain/factories/CapTableRegistry__factory";
 
@@ -88,9 +88,8 @@ export const Symfoni: React.FC<SymfoniProps> = ({
 
     const getProvider = async (): Promise<{ provider: providers.Provider, hardhatProviderName: string } | undefined> => {
         let hardhatProviderName = "Not set";
-        let _providerPriority = [...providerPriority]
+        let _providerPriority = [...providerPriority];
         // Fallback provider
-        console.log(fallbackProvider, autoInit, initializeCounter)
         if (fallbackProvider && autoInit && initializeCounter === 0) {
             if (localStorage.getItem("WEB3_CONNECT_CACHED_PROVIDER") === null) {
                 _providerPriority = _providerPriority.sort((a, b) => {
@@ -98,7 +97,6 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                 })
             }
         }
-        console.log(_providerPriority)
         const provider = await _providerPriority.reduce(async (maybeProvider: Promise<providers.Provider | undefined>, providerIdentification) => {
             let foundProvider = await maybeProvider
             if (foundProvider) {
@@ -166,7 +164,6 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     useEffect(() => {
         let subscribed = true
         const doAsync = async () => {
-            console.debug("initializeCounter", initializeCounter)
             const finish = (text: string) => {
                 setLoading(false)
                 setMessages(old => [...old, text])
@@ -204,7 +201,7 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     }, [initializeCounter])
 
     const getERC1400 = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = ERC1400__factory.connect(ethers.constants.AddressZero, _provider)
+        let instance = _signer ? ERC1400__factory.connect(ethers.constants.AddressZero, _signer) : ERC1400__factory.connect(ethers.constants.AddressZero, _provider)
         const contract: SymfoniERC1400 = {
             instance: instance,
             factory: _signer ? new ERC1400__factory(_signer) : undefined,

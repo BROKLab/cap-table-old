@@ -71,6 +71,14 @@ export const Theme: ThemeType = deepFreeze({
         radius: "0px",
       },
     },
+    focus: {
+      border: {
+        color: "#e6ebee",
+      },
+      shadow: {
+        size: "1px",
+      },
+    },
   },
   button: {
     size: {

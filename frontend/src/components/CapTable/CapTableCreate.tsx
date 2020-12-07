@@ -1,16 +1,19 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { ethers } from 'ethers';
-import { Box, Button, Grid, Heading, Select, Text } from 'grommet';
+import { Box, Button, Grid, Select, Text } from 'grommet';
 import { Search } from 'grommet-icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from "react-hook-form";
 import { useHistory } from 'react-router-dom';
 import { SpinnerDiamond } from 'spinners-react/lib/esm/SpinnerDiamond';
 import { CapTableQueContext, ERC1400Context, SymfoniContext } from "../../hardhat/SymfoniContext";
+import { Transaction } from '../../utils/ethers-helpers';
 import { formatCurrency } from '../../utils/numbers';
 import { removePassword } from '../../utils/passwordBlockAPI';
 
-interface Props { }
+interface Props {
+    transactions?: (tx: Transaction[]) => void
+}
 
 interface FormData {
     org: OrgData | null
@@ -100,14 +103,14 @@ const DEFAULT_DATA = [
     }
 ]
 
-export const CapTableCreate: React.FC<Props> = () => {
+export const CapTableCreate: React.FC<Props> = ({ ...props }) => {
     const { handleSubmit, watch, control, errors, setValue, formState, setError } = useForm<FormData>({
         defaultValues: {
             org: null,
         }
     });
     const history = useHistory();
-    const [orgList, setOrgList] = useState<OrgData[]>(() => process.env.NODE_ENV === "development" ? DEFAULT_DATA : []);
+    const [orgList, setOrgList] = useState<OrgData[]>(DEFAULT_DATA);
     const [isSearchingBrreg, setIsSearchingBrreg] = useState(false);
     const erc1400 = useContext(ERC1400Context)
     const capTableQue = useContext(CapTableQueContext)
@@ -182,21 +185,29 @@ export const CapTableCreate: React.FC<Props> = () => {
             '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
         ]
         const DEFAULT_PARTITIONS = [ethers.utils.formatBytes32String("A")]
-        const capTable = await erc1400.factory.deploy(data.org.Navn, data.org.Navn.substr(0, 3), 1, CONTROLLERS, DEFAULT_PARTITIONS)
-        await capTable.deployed()
-        console.debug("CapTable deployed", capTable.address)
-        const orgnr = data.org.Orgnr.toString();
-        const tx = await capTableQue.instance.add(capTable.address, ethers.utils.formatBytes32String(orgnr))
-        await tx.wait()
-        history.push("/capTable/" + capTable.address + "/onboard")
+
+        if (props.transactions) {
+            const capTableTx = await erc1400.factory.getDeployTransaction(data.org.Navn, data.org.Navn.substr(0, 3), 1, CONTROLLERS, DEFAULT_PARTITIONS)
+            const create2Address = ethers.utils.getContractAddress({ from: await erc1400.factory.signer.getAddress(), nonce: await erc1400.factory.signer.getTransactionCount() + 1 })
+            const queTx = await capTableQue.instance.populateTransaction.add(create2Address, ethers.utils.formatBytes32String(data.org.Orgnr.toString()))
+            return props.transactions([capTableTx, queTx])
+        } else {
+            const capTable = await erc1400.factory.deploy(data.org.Navn, data.org.Navn.substr(0, 3), 1, CONTROLLERS, DEFAULT_PARTITIONS)
+            await capTable.deployed()
+            console.debug("CapTable deployed", capTable.address)
+            const orgnr = data.org.Orgnr.toString();
+            const tx = await capTableQue.instance.add(capTable.address, ethers.utils.formatBytes32String(orgnr))
+            await tx.wait()
+            history.push("/capTable/" + capTable.address + "/onboard")
+        }
     }
 
     const [selected, setSelected] = useState<OrgData>();
     return (
         <Box>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Heading>Opprett aksjeeierbok</Heading>
-                <Box gap="medium" margin="large">
+
+                <Box gap="medium">
                     <Box gap="small">
                         <Text>Søk</Text>
                         <Grid columns={["flex", "auto"]}>
@@ -255,7 +266,6 @@ export const CapTableCreate: React.FC<Props> = () => {
                                 </Grid>
                             </Box>
                         }
-
                     </Box>
 
                     {orgWatch &&
@@ -263,7 +273,7 @@ export const CapTableCreate: React.FC<Props> = () => {
                             type="submit"
                             disabled={formState.isSubmitting /* || Object.keys(formState.touched).length === 0 */}
                             color="brand"
-                            label="Opprett aksjeeierbok"
+                            label="Velg selskap"
                             margin={{ /* top: "medium" */ }}
                             size="large"
                         ></Button>
