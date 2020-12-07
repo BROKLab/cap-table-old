@@ -1,17 +1,13 @@
 import { ethers } from 'ethers';
 import { Accordion, AccordionPanel, Box, Button, Heading, Paragraph } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { BatchIssue } from '../components/CapTable/BatchIssue';
 import { CapTableCreate } from '../components/CapTable/CapTableCreate';
 import { ERC1400Context, SignerContext, SymfoniContext } from '../hardhat/SymfoniContext';
 import { Transaction } from '../utils/ethers-helpers';
 
 interface Props {
-}
-
-interface RouteParams {
-
 }
 
 enum STEP {
@@ -30,12 +26,22 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
         2: []
     });
     const totalTransactions = Object.values(transactions).flat(1).length
+    const [capTableAddress, setcapTableAddress] = useState(ethers.constants.AddressZero);
     const capTable = useContext(ERC1400Context)
+
     const history = useHistory()
 
+    useEffect(() => {
+        console.log(capTableAddress)
 
+    }, [capTableAddress])
+
+    const handleCapTableTransactions = async (capTableAddress: string, txs: Transaction[]) => {
+        setcapTableAddress(capTableAddress)
+        handleTransactions(txs, STEP.SELECT_COMPANY)
+    }
     const handleTransactions = async (txs: Transaction[], step: STEP) => {
-        if (!signer) throw "NO signer"
+        if (!signer) throw Error("NO signer")
         setStep(step + 1)
         setTransactions(old => ({ ...old, [step]: [...txs] }))
     }
@@ -62,13 +68,13 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
             <Accordion justify="start" activeIndex={step} gap="small">
                 <AccordionPanel label="1. Velg selskap" onClickCapture={() => setStep(STEP.SELECT_COMPANY)}>
                     <Box pad="small">
-                        <CapTableCreate transactions={(txs) => handleTransactions(txs, STEP.SELECT_COMPANY)}></CapTableCreate>
+                        <CapTableCreate capTableTransactions={handleCapTableTransactions}></CapTableCreate>
                     </Box>
                 </AccordionPanel>
                 <AccordionPanel label="2. Utsted aksjer" onClickCapture={() => setStep(STEP.ISSUE_SHARES)}>
                     <Box pad="medium">
-                        {capTable.instance
-                            ? <BatchIssue transactions={(txs) => handleTransactions(txs, STEP.ISSUE_SHARES)} capTable={capTable.instance} actions={<Button type="button" size="medium" label="Hopp over" onClick={() => handleTransactions([], STEP.ISSUE_SHARES)}></Button>}></BatchIssue>
+                        {capTable.instance && capTableAddress !== ethers.constants.AddressZero
+                            ? <BatchIssue transactions={(txs) => handleTransactions(txs, STEP.ISSUE_SHARES)} capTable={capTable.instance.attach(capTableAddress)} actions={<Button type="button" size="medium" label="Hopp over" onClick={() => handleTransactions([], STEP.ISSUE_SHARES)}></Button>}></BatchIssue>
                             : <Paragraph fill>Ingen kobling til aksjeeierboken</Paragraph>
                         }
                     </Box>

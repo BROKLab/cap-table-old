@@ -12,7 +12,7 @@ import { formatCurrency } from '../../utils/numbers';
 import { removePassword } from '../../utils/passwordBlockAPI';
 
 interface Props {
-    transactions?: (tx: Transaction[]) => void
+    capTableTransactions?: (capTableAddress: string, txs: Transaction[]) => void
 }
 
 interface FormData {
@@ -186,11 +186,12 @@ export const CapTableCreate: React.FC<Props> = ({ ...props }) => {
         ]
         const DEFAULT_PARTITIONS = [ethers.utils.formatBytes32String("A")]
 
-        if (props.transactions) {
+        if (props.capTableTransactions) {
             const capTableTx = await erc1400.factory.getDeployTransaction(data.org.Navn, data.org.Navn.substr(0, 3), 1, CONTROLLERS, DEFAULT_PARTITIONS)
-            const create2Address = ethers.utils.getContractAddress({ from: await erc1400.factory.signer.getAddress(), nonce: await erc1400.factory.signer.getTransactionCount() + 1 })
+            const create2Address = ethers.utils.getContractAddress({ from: await erc1400.factory.signer.getAddress(), nonce: await erc1400.factory.signer.getTransactionCount() })
+            console.log("create2Address", create2Address)
             const queTx = await capTableQue.instance.populateTransaction.add(create2Address, ethers.utils.formatBytes32String(data.org.Orgnr.toString()))
-            return props.transactions([capTableTx, queTx])
+            return props.capTableTransactions(create2Address, [capTableTx, queTx])
         } else {
             const capTable = await erc1400.factory.deploy(data.org.Navn, data.org.Navn.substr(0, 3), 1, CONTROLLERS, DEFAULT_PARTITIONS)
             await capTable.deployed()

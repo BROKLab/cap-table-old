@@ -1,4 +1,4 @@
-import { BytesLike, ethers, UnsignedTransaction } from 'ethers';
+import { BytesLike, ethers } from 'ethers';
 import { Box, Button, Grid, Select, Text, TextInput } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -31,7 +31,7 @@ const DEFAULT_ROW = {
 }
 
 export const BatchIssue: React.FC<Props> = ({ ...props }) => {
-    const { handleSubmit, control, errors, setValue, getValues } = useForm<FormData>({
+    const { handleSubmit, control, errors, setValue } = useForm<FormData>({
         defaultValues: DEFAULT_ROW
     });
     const [rows, setRows] = useState(1);
@@ -158,11 +158,11 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
                         </Grid>
                     )}
 
-                    <Box gap="large" alignSelf="end" direction="row-responsive" align="end">
+                    <Box gap="small" alignSelf="end" direction="row-responsive" align="end">
                         <Button color="black" label="Legg til ny rad" onClick={() => setRows(rows + 1)} style={{ borderRadius: "0px" }}></Button>
                         <Button color="red" label="Fjern nederste rad" onClick={() => setRows(rows - 1)} disabled={rows === 1} style={{ borderRadius: "0px" }}></Button>
-                        <Button color="black" label="Lagre og gå videre" type="submit" /* disabled={!formState.isValid || formState.isSubmitting} */ style={{ borderRadius: "0px" }}></Button>
                         {props.actions}
+                        <Button color="black" label={props.transactions ? "Lagre og gå videre" : "Utested"} type="submit" /* disabled={!formState.isValid || formState.isSubmitting} */ style={{ borderRadius: "0px" }}></Button>
                     </Box>
                 </Box>
             </form>
