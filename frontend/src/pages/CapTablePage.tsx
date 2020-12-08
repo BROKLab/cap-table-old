@@ -2,7 +2,6 @@ import { Box, Text } from 'grommet';
 import React, { useContext } from 'react';
 import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 import { Details } from '../components/CapTable/Details';
-import { OnBoard } from '../components/CapTable/OnBoard';
 import { Loading } from '../components/ui/Loading';
 import { ERC1400Context } from '../hardhat/SymfoniContext';
 
@@ -31,7 +30,7 @@ export const CapTablePage: React.FC<Props> = ({ ...props }) => {
             {capTable &&
                 <Switch>
                     <Route path={`${path}`} exact={true} render={() => <Details capTable={capTable} />} />
-                    <Route path={`${path}/onboard`} exact={true} render={() => <OnBoard capTable={capTable} />} />
+                    {/* <Route path={`${path}/onboard`} exact={true} render={() => <OnBoard capTable={capTable} />} /> */}
                 </Switch>
             }
         </Box >

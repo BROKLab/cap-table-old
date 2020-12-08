@@ -1,6 +1,7 @@
 import { Box, Heading } from 'grommet';
 
-import React from 'react';
+import React, { useContext } from 'react';
+import { SignerContext } from '../../hardhat/SymfoniContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { Actions } from './Actions';
 import { Balances } from './Balances';
@@ -11,13 +12,17 @@ interface Props {
 }
 
 export const Details: React.FC<Props> = ({ ...props }) => {
-
+    const [signer] = useContext(SignerContext)
     return (
         <Box>
             <Heading level={3}>Nøkkelopplysninger</Heading>
             <Info capTable={props.capTable}></Info>
-            <Heading level={3}>Handlinger</Heading>
-            <Actions capTable={props.capTable}></Actions>
+            {signer &&
+                <>
+                    <Heading level={3}>Handlinger</Heading>
+                    <Actions capTable={props.capTable}></Actions>
+                </>
+            }
             <Heading level={3}>Aksjeliste</Heading>
             <Balances capTable={props.capTable}></Balances>
         </Box>

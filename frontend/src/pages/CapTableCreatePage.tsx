@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
-import { Accordion, AccordionPanel, Box, Button, Heading, Paragraph } from 'grommet';
+import { Accordion, AccordionPanel, Box, Button, Heading, Paragraph, Text } from 'grommet';
+import { Checkmark } from 'grommet-icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BatchIssue } from '../components/CapTable/BatchIssue';
@@ -88,6 +89,24 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
                 </AccordionPanel>
                 <AccordionPanel label="3. Bekreft" onClickCapture={() => setStep(STEP.CONFIRM)}>
                     <Box margin="small">
+                        <Paragraph fill={true}>Kun selskapets <strong>styreleder</strong> kan flytte aksjeeierboken til Brønnøysundregistrene Aksjeeierbok.
+                Når selskapet bruker denne løsningen, vil dette være en offisielle aksjeeierboken,
+                og den tidligere aksjeeierboken selskapet er ikke lengre gyldig.</Paragraph>
+
+                        <Paragraph fill={true}>Aksjonærer i selskapet vil kunne sende aksjene sine til andre uten styrets samtykke,
+                        og aksjeeierboken vil automatisk oppdateres fortløpende.
+                </Paragraph>
+
+                        <Paragraph><Text weight="bold">Ved å fortsette, bekrefter du følgende:</Text></Paragraph>
+
+                        <Paragraph fill={true}><Checkmark size="small"></Checkmark> Jeg er styreleder i selskapet jeg valgte i forrige steg.</Paragraph>
+                        <Paragraph fill={true}><Checkmark size="small"></Checkmark> Jeg er inneforstått med at løsningen ikke automatisk innrapporterer noe til offentlig sektor,
+                    og at innrapportering forstatt må gjøres som før.</Paragraph>
+                        <Paragraph fill={true}><Checkmark size="small"></Checkmark> Jeg er inneforstått med at løsningen er i Brønnøysundregistrene Sandkasse,
+                    som betyr at Brønnøysundregistrene kan slutte å drifte løsningen. Det vil da være mulig å laste need aksjeeierboken i csv-format.</Paragraph>
+                        <Paragraph fill={true}><Checkmark size="small"></Checkmark> Jeg er inneforstått med at løsningen er i Brønnøysundregistrene Sandkasse, som betyr at det kan være feil i løsningen.</Paragraph>
+                        <Paragraph fill={true}><Checkmark size="small"></Checkmark> Jeg er inneforstått med at aksjeeierboken blir liggende offentlig tilgjengelig på nett.</Paragraph>
+
                         <Paragraph fill>Det kreves {totalTransactions} signereing for å opprette dette selskapet og utstede aksjene. Metamask vil forslå signering for deg.</Paragraph>
                     </Box>
                 </AccordionPanel>
