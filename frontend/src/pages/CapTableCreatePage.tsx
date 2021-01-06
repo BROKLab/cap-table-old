@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { Accordion, AccordionPanel, Box, Button, Heading, Paragraph, Text } from 'grommet';
 import { Checkmark } from 'grommet-icons';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BatchIssue } from '../components/CapTable/BatchIssue';
 import { CapTableCreate } from '../components/CapTable/CapTableCreate';
@@ -33,11 +33,6 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
     const [deploying, setDeploying] = useState(false);
 
     const history = useHistory()
-
-    useEffect(() => {
-        console.log(capTableAddress)
-
-    }, [capTableAddress])
 
     const handleCapTableTransactions = async (capTableAddress: string, txs: Transaction[]) => {
         setcapTableAddress(capTableAddress)

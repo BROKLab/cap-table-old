@@ -102,6 +102,14 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
                                 </Box>
                             </AccordionPanel>
 
+                            <AccordionPanel label={<Text weight="bold" margin="small" size="large">Autentiser deg <span role="img" aria-label="user">👤</span></Text>}>
+                                <Box margin={{ left: "large" }} pad="small" gap="small" >
+                                    <Paragraph fill>Bruk en autentiserings tjeneste for å koble lommeboken din mot en fysisk person. Kun autentiseringstjenesten vil kunne se denne informasjonen. Det vil være synlig for andre at addressen til lommeboken din er autentisert, men ikke av hvem.</Paragraph>
+                                    <Button size="small" target="_blank" href="https://brreg1.gitlab.io/auth-contracts/" label="Symfoni autentisering"></Button>
+                                    {/* <Button reverse={true} icon={hasChainId ? <Checkmark></Checkmark> : <CircleQuestion></CircleQuestion>} label={hasChainId ? "Du er på riktig nettverk" : "Test om du er på riktig nettverk"} onClick={() => checkChainId()}></Button> */}
+                                </Box>
+                            </AccordionPanel>
+
                             <Button size="large" icon={ready ? <Checkmark></Checkmark> : <CircleQuestion></CircleQuestion>} label={ready ? "Du er klar, klikk igjen for gå til Aksjeeierboken" : "Test om alt er riktig"} onClick={() => handleCheckAll()} ></Button>
 
                         </Accordion>

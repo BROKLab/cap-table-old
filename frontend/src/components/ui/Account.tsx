@@ -1,10 +1,11 @@
 
 
 import { ethers } from 'ethers';
-import { Box, Button, Grid, Paragraph, Select, Text, Image } from 'grommet';
+import { Anchor, Box, Button, DropButton, Grid, Image, Menu, Paragraph, Select, Text } from 'grommet';
 import { User } from 'grommet-icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../utils/AuthContext';
 import { CurrentAddressContext, SymfoniContext } from './../../hardhat/SymfoniContext';
 import { Modal } from './Modal';
 
@@ -16,6 +17,7 @@ export const Account: React.FC<Props> = () => {
     const [address] = useContext(CurrentAddressContext)
     const { init, currentHardhatProvider, loading, providers } = useContext(SymfoniContext)
     const [selectedProvider, setSelectedProvider] = useState<string>();
+    const { user, logOut } = useContext(AuthContext)
 
     // fund account
     useEffect(() => {
@@ -41,9 +43,10 @@ export const Account: React.FC<Props> = () => {
         }
     }, [address])
 
+
     const [showDisconnect, setShowDisconnect] = useState(false);
     return (
-        <Box gap="small" >
+        <Box pad="small">
             {SHOW_PROVIDER_SWITCH &&
                 <Box>
                     <Grid gap="small" columns={["auto", "flex"]}>
@@ -73,10 +76,30 @@ export const Account: React.FC<Props> = () => {
                         </Link>
                     )}
                     {address && (
-                        <Grid columns={["flex", "flex", "flex"]} gap="small">
-                            <Button size="small" icon={<User></User>} label={`${address.substr(0, 4)}..`} hoverIndicator={false} style={{ cursor: "not-allowed" }}></Button>
-                            <Button size="small" label={"Logg ut"} onClick={() => setShowDisconnect(true)}></Button>
-                        </Grid>
+                        <Box pad="small">
+
+                            <DropButton
+                                label={user ? user.name : `${address.substr(0, 4)}..`}
+                                icon={<User></User>}
+                                size="medium"
+                                reverse={true}
+                                dropAlign={{ top: 'bottom', right: 'right' }}
+                                dropContent={
+                                    <Box pad="small" elevation="large" align="start">
+                                        {logOut &&
+                                            <Anchor label="Log ut" onClick={() => logOut()}></Anchor>
+                                        }
+                                    </Box>
+                                }
+                            />
+                        </Box>
+                        // <Grid columns={["flex", "flex"]} gap="small">
+                        //     <Box border="all" alignContent="end" round={"full"}>
+
+                        //     </Box>
+                        //     {/* <Button size="small" icon={<User></User>} label={`${address.substr(0, 4)}..`} hoverIndicator={false} style={{ cursor: "not-allowed" }}></Button>
+                        //     <Button size="small" label={"Logg ut"} onClick={() => setShowDisconnect(true)}></Button> */}
+                        // </Grid>
                     )}
                 </Box>
             }

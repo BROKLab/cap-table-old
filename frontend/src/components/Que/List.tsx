@@ -61,6 +61,7 @@ export const List: React.FC<Props> = ({ ...props }) => {
         <Box>
             <DataTable
                 data={listData}
+                primaryKey={"address"}
                 columns={[
                     {
                         property: 'uuid',
