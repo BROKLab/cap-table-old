@@ -16,6 +16,7 @@
     "ethers": "^5.0.17",
     "grommet": "2.15.2",
     "grommet-icons": "^4.5.0",
+    "norwegian-national-id-validator": "^3.0.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-hook-form": "^6.11.5",

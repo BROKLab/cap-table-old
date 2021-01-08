@@ -1,7 +1,7 @@
 
 
 import { ethers } from 'ethers';
-import { Anchor, Box, Button, DropButton, Grid, Image, Menu, Paragraph, Select, Text } from 'grommet';
+import { Anchor, Box, Button, DropButton, Grid, Image, Paragraph, Select, Text } from 'grommet';
 import { User } from 'grommet-icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -70,12 +70,12 @@ export const Account: React.FC<Props> = () => {
             }
             {!SHOW_PROVIDER_SWITCH &&
                 <Box align="center">
-                    {!address && (
+                    {!user && (
                         <Link to="/account/onboard">
                             <Button size="small" label="Logg inn" hoverIndicator focusIndicator={false} />
                         </Link>
                     )}
-                    {address && (
+                    {user && (
                         <Box pad="small">
 
                             <DropButton

@@ -120,7 +120,7 @@ export const CapTableCreate: React.FC<Props> = ({ ...props }) => {
 
     useEffect(() => {
         if (process.env.NODE_ENV === "development") {
-            setValue("searchInput", "915772137")
+            setValue("org", DEFAULT_DATA[0])
         }
     }, [setValue])
 
@@ -182,7 +182,8 @@ export const CapTableCreate: React.FC<Props> = ({ ...props }) => {
 
         const CONTROLLERS = [
             '0xC9901c379E672912D86D12Cb8f182cFaf5951940',
-            '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+            '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+            '0xbb1c879cb7f5129ba026DfE1E5f30979D7978A65'
         ]
         const DEFAULT_PARTITIONS = [ethers.utils.formatBytes32String("A")]
 
@@ -207,7 +208,6 @@ export const CapTableCreate: React.FC<Props> = ({ ...props }) => {
     return (
         <Box>
             <form onSubmit={handleSubmit(onSubmit)}>
-
                 <Box gap="medium">
                     <Box gap="small">
                         <Text>Søk</Text>

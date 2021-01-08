@@ -1,17 +1,45 @@
 import axios, { AxiosError } from "axios";
 import { ethers } from "ethers";
 
-interface GetChallengeTokenResponse {
+// HTTP types
+export interface GetAuthChallengeTokenReponse {
   challengeToken: string;
 }
-interface GetAuthTokenResponse {
+export interface GetAuthAuthTokenResponse {
   authToken: string;
 }
 
-interface AuthProviderErrorResponse {
+export interface GetBrregUnclaimedResponse {
+  address: string;
+}
+export interface AuthProviderErrorResponse {
   message: string;
   code: number;
 }
+
+// Types
+export interface AuthProviderAddress {
+  active: boolean;
+  address: string;
+  unclaimed?: AuthProviderUnclaimed;
+}
+export interface AuthProviderUser {
+  addresses: AuthProviderAddress[];
+  id: number;
+  name: string;
+  uuid: string;
+}
+
+export interface AuthProviderUnclaimed {
+  id: number;
+  sourceId?: number;
+  contract?: string;
+  protocol?: string;
+  claimed: Date;
+  proof?: string;
+  addressAddress: string;
+}
+
 export function authProviderURL() {
   const AUTH_PROVIDER_URL = process.env.REACT_APP_AUTH_PROVIDER_URL;
   if (!AUTH_PROVIDER_URL) {
@@ -25,7 +53,7 @@ export async function getChallengeToken(address: string): Promise<string> {
     throw Error("Address provided is not considered an address");
   }
   const challenge = await axios
-    .get<GetChallengeTokenResponse>(
+    .get<GetAuthChallengeTokenReponse>(
       authProviderURL() + "/auth/get-challenge-token",
       {
         params: {
@@ -59,7 +87,7 @@ export async function getAuthToken(
   challengeToken: string
 ): Promise<string> {
   const challenge = await axios
-    .get<GetAuthTokenResponse>(authProviderURL() + "/auth/get-auth-token", {
+    .get<GetAuthAuthTokenResponse>(authProviderURL() + "/auth/get-auth-token", {
       params: {
         signature,
         challengeToken,
@@ -104,6 +132,61 @@ export async function getUserMe(authToken: string) {
   if (me.status === 200) {
     if (me.data) {
       return me.data;
+    }
+  }
+  throw Error("Response did not include an auth token.");
+}
+
+export async function unclaimed(
+  authToken: string,
+  contract: string,
+  protocol: string,
+  uuidHash: string
+) {
+  const res = await axios
+    .get<GetBrregUnclaimedResponse>(authProviderURL() + "/brreg/unclaimed", {
+      headers: {
+        Authorization: "Bearer " + authToken,
+      },
+      params: {
+        contract,
+        protocol,
+        uuidHash,
+      },
+    })
+    .catch((error: AxiosError<AuthProviderErrorResponse>) => {
+      if (error.response && error.response.data.message) {
+        throw Error(error.response.data.message);
+      }
+      throw Error(error.message);
+    });
+  if (res.status === 200) {
+    if (res.data) {
+      return res.data;
+    }
+  }
+  throw Error("Response did not include an auth token.");
+}
+
+export interface GetBrregUnclaimListResponse {
+  addresses: AuthProviderAddress[];
+}
+export async function unclaimedList(authToken: string) {
+  const res = await axios
+    .get<AuthProviderAddress>(authProviderURL() + "/brreg/unclaimed/list", {
+      headers: {
+        Authorization: "Bearer " + authToken,
+      },
+    })
+    .catch((error: AxiosError<AuthProviderErrorResponse>) => {
+      if (error.response && error.response.data.message) {
+        throw Error(error.response.data.message);
+      }
+      throw Error(error.message);
+    });
+  if (res.status === 200) {
+    if (res.data) {
+      return res.data;
     }
   }
   throw Error("Response did not include an auth token.");
