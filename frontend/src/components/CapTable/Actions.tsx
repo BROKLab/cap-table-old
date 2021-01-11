@@ -5,6 +5,7 @@ import { Modal } from '../ui/Modal';
 import { Transfer } from './Transfer';
 import { SymfoniContext } from '../../hardhat/SymfoniContext';
 import { BatchIssue } from './BatchIssue';
+import { Extensions } from './Extensions';
 
 interface Props {
     capTable: ERC1400
@@ -14,11 +15,13 @@ export const Actions: React.FC<Props> = ({ ...props }) => {
     const { init } = useContext(SymfoniContext)
     const [showTransfers, setShowTransfers] = useState(false);
     const [showIssue, setShowIssue] = useState(false);
+    const [showExtensions, setShowExtensions] = useState(true);
 
     return (
         <Box gap="small" direction="row">
-            <Button label={"Overføre"} onClick={() => setShowTransfers(!showTransfers)}></Button>
-            <Button label={"Utestede"} onClick={() => setShowIssue(!showTransfers)}></Button>
+            <Button size="small" label={"Overføre"} onClick={() => setShowTransfers(!showTransfers)}></Button>
+            <Button size="small" label={"Utestede"} onClick={() => setShowIssue(!showTransfers)}></Button>
+            <Button size="small" label={"Utvidelser"} onClick={() => setShowExtensions(!showExtensions)}></Button>
             <Modal show={showTransfers} setShow={setShowTransfers}>
                 <Transfer capTable={props.capTable} done={() => {
                     setShowTransfers(false)
@@ -30,6 +33,12 @@ export const Actions: React.FC<Props> = ({ ...props }) => {
                     setShowTransfers(false)
                     init()
                 }}></BatchIssue>
+            </Modal>
+            <Modal show={showExtensions} setShow={setShowExtensions}>
+                <Extensions capTable={props.capTable} done={() => {
+                    setShowTransfers(false)
+                    init()
+                }}></Extensions>
             </Modal>
         </Box>
 

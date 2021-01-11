@@ -19,7 +19,7 @@ export const Modal: React.FC<Props> = ({ ...props }) => {
             <Box margin="medium" align="center" gap="small" >
                 {props.children}
                 <Box width="full">
-                    <Button label="Lukk" onClick={() => props.setShow(false)} />
+                    <Button size="small" label="Lukk" onClick={() => props.setShow(false)} />
                 </Box>
             </Box>
         </Layer>

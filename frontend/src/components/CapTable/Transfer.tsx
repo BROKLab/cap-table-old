@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Box, Button, Select, TextInput, Text } from 'grommet';
 import { BigNumberish, BytesLike, ethers } from 'ethers';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
-import { SignerContext, SymfoniContext } from '../../hardhat/SymfoniContext';
+import { AuthProviderContext, CurrentAddressContext, SignerContext, SymfoniContext } from '../../hardhat/SymfoniContext';
+import { AuthProvider } from '../../hardhat/typechain/AuthProvider';
 
 interface Props {
     capTable: ERC1400
@@ -17,6 +18,8 @@ export const Transfer: React.FC<Props> = ({ ...props }) => {
     const [amount, setAmount] = useState<BigNumberish>(ethers.constants.Zero);
     const [signer] = useContext(SignerContext)
     const { init } = useContext(SymfoniContext)
+    const [currentAddress] = useContext(CurrentAddressContext)
+    const authProvider = useContext(AuthProviderContext).instance?.attach(process.env.REACT_APP_AUTH_PROVIDER_ADDRESS ? process.env.REACT_APP_AUTH_PROVIDER_ADDRESS : ethers.constants.AddressZero)
     // Get partitions
     useEffect(() => {
         let subscribed = true
@@ -29,6 +32,20 @@ export const Transfer: React.FC<Props> = ({ ...props }) => {
         doAsync();
         return () => { subscribed = false }
     }, [props.capTable])
+
+    useEffect(() => {
+        let subscribed = true
+        const doAsync = async () => {
+            if (authProvider) {
+                const auth = await authProvider.hasAuthenticated(currentAddress, Math.floor(Date.now() / 1000))
+                console.log(auth)
+            }
+            if (subscribed) {
+            }
+        };
+        doAsync();
+        return () => { subscribed = false }
+    }, [])
 
     const transfer = async () => {
         if (!signer)

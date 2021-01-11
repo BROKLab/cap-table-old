@@ -65,6 +65,7 @@ export const getERC1400Addresses = async (
     _fromBlock,
     "latest"
   );
+  console.log("issueByPartition", issueByPartition);
   const transferByPartition = await capTable.queryFilter(
     capTable.filters.TransferByPartition(
       _partitionFilter,
@@ -78,6 +79,7 @@ export const getERC1400Addresses = async (
     _fromBlock,
     "latest"
   );
+  console.log("transferByPartition", transferByPartition);
   const redeemByPartition = await capTable.queryFilter(
     capTable.filters.RedeemedByPartition(
       _partitionFilter,
@@ -99,7 +101,10 @@ export const getERC1400Addresses = async (
   const results = logs
     .filter((event) => {
       if (event.args) {
-        if ("to" in event.args && "partition" in event.args) {
+        if (
+          "to" in event.args &&
+          ("partition" in event.args || "fromPartition" in event.args)
+        ) {
           return true;
         }
       }
@@ -107,10 +112,17 @@ export const getERC1400Addresses = async (
     })
     .map((event) => {
       if (event.args) {
-        if ("to" in event.args && "partition" in event.args) {
+        if (
+          "to" in event.args &&
+          ("partition" in event.args || "fromPartition" in event.args)
+        ) {
+          const parition =
+            "partition" in event.args
+              ? event.args.partition
+              : event.args.fromPartition;
           return {
             address: event.args.to as string,
-            partition: event.args.partition as BytesLike,
+            partition: parition as BytesLike,
           };
         }
       }

@@ -41,13 +41,13 @@ contract ERC1400 is
 
     // Token extensions
     string internal constant ERC1400_TOKENS_CHECKER = "ERC1400TokensChecker";
-    string
-        internal constant ERC1400_TOKENS_VALIDATOR = "ERC1400TokensValidator";
+    string internal constant ERC1400_TOKENS_VALIDATOR =
+        "ERC1400TokensValidator";
 
     // User extensions
     string internal constant ERC1400_TOKENS_SENDER = "ERC1400TokensSender";
-    string
-        internal constant ERC1400_TOKENS_RECIPIENT = "ERC1400TokensRecipient";
+    string internal constant ERC1400_TOKENS_RECIPIENT =
+        "ERC1400TokensRecipient";
 
     /************************************* Token description ****************************************/
     string internal _name;
@@ -454,10 +454,9 @@ contract ERC1400 is
         ); // 0x53	insufficient allowance
 
         if (_allowedByPartition[partition][from][msg.sender] >= value) {
-            _allowedByPartition[partition][from][msg
-                .sender] = _allowedByPartition[partition][from][msg.sender].sub(
-                value
-            );
+            _allowedByPartition[partition][from][
+                msg.sender
+            ] = _allowedByPartition[partition][from][msg.sender].sub(value);
         } else {
             _allowedByPartition[partition][from][msg.sender] = 0;
         }
@@ -1097,9 +1096,8 @@ contract ERC1400 is
         pure
         returns (bytes32 toPartition)
     {
-
-            bytes32 changePartitionFlag
-         = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
+        bytes32 changePartitionFlag =
+            0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
         bytes32 flag;
         assembly {
             flag := mload(add(data, 32))
@@ -1124,7 +1122,9 @@ contract ERC1400 is
         bytes32 partition,
         uint256 value
     ) internal {
-        _balanceOfByPartition[from][partition] = _balanceOfByPartition[from][partition]
+        _balanceOfByPartition[from][partition] = _balanceOfByPartition[from][
+            partition
+        ]
             .sub(value);
         _totalSupplyByPartition[partition] = _totalSupplyByPartition[partition]
             .sub(value);
@@ -1149,8 +1149,8 @@ contract ERC1400 is
             require(index2 > 0, "50"); // 0x50	transfer failure
 
             // move the last item into the index being vacated
-            bytes32 lastValue = _partitionsOf[from][_partitionsOf[from].length -
-                1];
+            bytes32 lastValue =
+                _partitionsOf[from][_partitionsOf[from].length - 1];
             _partitionsOf[from][index2 - 1] = lastValue; // adjust for 1-based indexing
             _indexOfPartitionsOf[from][lastValue] = index2;
 
@@ -1175,14 +1175,18 @@ contract ERC1400 is
                 _partitionsOf[to].push(partition);
                 _indexOfPartitionsOf[to][partition] = _partitionsOf[to].length;
             }
-            _balanceOfByPartition[to][partition] = _balanceOfByPartition[to][partition]
+            _balanceOfByPartition[to][partition] = _balanceOfByPartition[to][
+                partition
+            ]
                 .add(value);
 
             if (_indexOfTotalPartitions[partition] == 0) {
                 _totalPartitions.push(partition);
                 _indexOfTotalPartitions[partition] = _totalPartitions.length;
             }
-            _totalSupplyByPartition[partition] = _totalSupplyByPartition[partition]
+            _totalSupplyByPartition[partition] = _totalSupplyByPartition[
+                partition
+            ]
                 .add(value);
         }
     }
@@ -1573,10 +1577,8 @@ contract ERC1400 is
             bytes32
         )
     {
-        address checksImplementation = interfaceAddr(
-            address(this),
-            ERC1400_TOKENS_CHECKER
-        );
+        address checksImplementation =
+            interfaceAddr(address(this), ERC1400_TOKENS_CHECKER);
 
         if ((checksImplementation != address(0))) {
             return
@@ -1631,7 +1633,9 @@ contract ERC1400 is
             i < _controllersByPartition[partition].length;
             i++
         ) {
-            _isControllerByPartition[partition][_controllersByPartition[partition][i]] = false;
+            _isControllerByPartition[partition][
+                _controllersByPartition[partition][i]
+            ] = false;
         }
         for (uint256 j = 0; j < operators.length; j++) {
             _isControllerByPartition[partition][operators[j]] = true;
