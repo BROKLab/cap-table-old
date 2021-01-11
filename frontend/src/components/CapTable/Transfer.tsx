@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Box, Button, Select, TextInput, Text } from 'grommet';
 import { BigNumberish, BytesLike, ethers } from 'ethers';
-import { ERC1400 } from '../../hardhat/typechain/ERC1400';
+import { Box, Button, Select, Text, TextInput } from 'grommet';
+import React, { useContext, useEffect, useState } from 'react';
 import { AuthProviderContext, CurrentAddressContext, SignerContext, SymfoniContext } from '../../hardhat/SymfoniContext';
-import { AuthProvider } from '../../hardhat/typechain/AuthProvider';
+import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 
 interface Props {
     capTable: ERC1400
@@ -45,7 +44,7 @@ export const Transfer: React.FC<Props> = ({ ...props }) => {
         };
         doAsync();
         return () => { subscribed = false }
-    }, [])
+    }, [authProvider, currentAddress])
 
     const transfer = async () => {
         if (!signer)

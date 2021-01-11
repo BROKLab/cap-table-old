@@ -23,13 +23,16 @@ export const Extensions: React.FC<Props> = ({ ...props }) => {
         const doAsync = async () => {
             if (erc1820) {
                 const tokenValidator = await erc1820.getInterfaceImplementer(props.capTable.address, ethers.utils.id("ERC1400TokensValidator"))
-                console.log("Manager", tokenValidator)
+                if (subscribed) {
+
+                    console.log("Manager", tokenValidator)
+                }
             }
 
         };
         doAsync();
         return () => { subscribed = false }
-    }, [props.capTable])
+    }, [props.capTable, erc1820])
 
 
     const addAuthValidator = async () => {
