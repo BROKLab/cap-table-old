@@ -135,7 +135,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
             <form id={props.capTable.address} onSubmit={handleSubmit(onSubmitBatchIssue)}>
                 <Box gap="small">
                     <Grid columns={COLUMNS} fill="horizontal" gap="small">
-                        <Text size="small" weight="bold" truncate>Addresse</Text>
+                        <Text size="small" weight="bold" truncate>Identifisering</Text>
                         <Text size="small" weight="bold" truncate>Antall aksjer</Text>
                         <Text style={{ display: useDefaultPartitions ? "none" : "inherit" }} size="small" weight="bold" truncate>Partisjon</Text>
                     </Grid>
@@ -153,6 +153,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
                                 {partitions &&
                                     <Controller
                                         render={({ onChange, value }) => <Select
+                                            alignSelf="start"
                                             options={partitions}
                                             size="small"
                                             labelKey={(option) => ethers.utils.parseBytes32String(option)}

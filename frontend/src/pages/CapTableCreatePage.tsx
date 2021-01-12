@@ -77,8 +77,8 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
                 <AccordionPanel label="2. Utsted aksjer" onClickCapture={() => setStep(STEP.ISSUE_SHARES)}>
                     <Box pad="medium">
                         {capTable.instance && capTableAddress !== ethers.constants.AddressZero
-                            ? <BatchIssue transactions={(txs) => handleTransactions(txs, STEP.ISSUE_SHARES)} capTable={capTable.instance.attach(capTableAddress)} actions={<Button type="button" size="medium" label="Hopp over" onClick={() => handleTransactions([], STEP.ISSUE_SHARES)}></Button>}></BatchIssue>
-                            : <Paragraph fill>Ingen kobling til aksjeeierboken</Paragraph>
+                            ? <BatchIssue transactions={(txs) => handleTransactions(txs, STEP.ISSUE_SHARES)} capTable={capTable.instance.attach(capTableAddress)}></BatchIssue>
+                            : <Paragraph fill>Vennligst velg en aksjeeierbok</Paragraph>
                         }
                     </Box>
                 </AccordionPanel>

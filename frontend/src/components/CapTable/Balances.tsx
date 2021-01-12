@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { getERC1400Addresses } from '../../utils/erc1400-helpers';
 import { formatBN } from '../../utils/numbers';
+import { FormatAddress } from '../ui/FormatAddress';
 
 interface Props {
     capTable: ERC1400
@@ -64,7 +65,7 @@ export const Balances: React.FC<Props> = ({ ...props }) => {
                     {
                         property: 'address',
                         header: <Text>ID</Text>,
-                        render: data => (data.address.substr(0, 4) + "..")
+                        render: data => <FormatAddress address={data.address}></FormatAddress>
 
                     },
                     {

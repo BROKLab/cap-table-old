@@ -25,7 +25,7 @@
   "scripts": {
     "test": "npx hardhat test",
     "node": "npx hardhat node --watch --no-reset",
-    "frontend": "cd frontend && npm run start",
+    "start": "cd frontend && npm run start",
     "build": "npx hardhat typechain && npx hardhat deploy --network brregProd"
   },
   "repository": {

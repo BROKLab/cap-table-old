@@ -118,11 +118,11 @@ export const CapTableCreate: React.FC<Props> = ({ ...props }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const { init } = useContext(SymfoniContext)
 
-    useEffect(() => {
-        if (process.env.NODE_ENV === "development") {
-            setValue("org", DEFAULT_DATA[0])
-        }
-    }, [setValue])
+    // useEffect(() => {
+    //     if (process.env.NODE_ENV === "development") {
+    //         setValue("org", DEFAULT_DATA[0])
+    //     }
+    // }, [setValue])
 
     useEffect(() => {
         const timer = setTimeout(async () => {

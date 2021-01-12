@@ -1,3 +1,4 @@
+// TODO - Normalize types and responses
 import axios, { AxiosError } from "axios";
 import { ethers } from "ethers";
 
@@ -8,13 +9,21 @@ export interface GetAuthChallengeTokenReponse {
 export interface GetAuthAuthTokenResponse {
   authToken: string;
 }
-
 export interface GetBrregUnclaimedResponse {
   address: string;
 }
 export interface AuthProviderErrorResponse {
   message: string;
   code: number;
+}
+export interface GetBrregUnclaimListResponse {
+  addresses: AuthProviderAddress[];
+}
+
+export interface GetUserNamesResponse {
+  names: {
+    [address: string]: string;
+  };
 }
 
 // Types
@@ -168,14 +177,35 @@ export async function unclaimed(
   throw Error("Response did not include an auth token.");
 }
 
-export interface GetBrregUnclaimListResponse {
-  addresses: AuthProviderAddress[];
-}
 export async function unclaimedList(authToken: string) {
   const res = await axios
     .get<AuthProviderAddress>(authProviderURL() + "/brreg/unclaimed/list", {
       headers: {
         Authorization: "Bearer " + authToken,
+      },
+    })
+    .catch((error: AxiosError<AuthProviderErrorResponse>) => {
+      if (error.response && error.response.data.message) {
+        throw Error(error.response.data.message);
+      }
+      throw Error(error.message);
+    });
+  if (res.status === 200) {
+    if (res.data) {
+      return res.data;
+    }
+  }
+  throw Error("Response did not include an auth token.");
+}
+
+export async function userNames(authToken: string, addresses: string[]) {
+  const res = await axios
+    .get<GetUserNamesResponse>(authProviderURL() + "/user/names", {
+      headers: {
+        Authorization: "Bearer " + authToken,
+      },
+      params: {
+        addresses,
       },
     })
     .catch((error: AxiosError<AuthProviderErrorResponse>) => {

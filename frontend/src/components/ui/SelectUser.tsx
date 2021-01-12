@@ -23,7 +23,6 @@ export const SelectUser: React.FC<Props> = ({ ...props }) => {
     const [identifier, setIdentifier] = useState(IDENTIFIER.DEFAULT);
     const [searchInput, setSearchInput] = useState(props.value);
 
-
     const setValue = useCallback((value: string) => {
         props.onChange(value)
         // eslint-disable-next-line

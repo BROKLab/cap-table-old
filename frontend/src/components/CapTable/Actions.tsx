@@ -15,7 +15,7 @@ export const Actions: React.FC<Props> = ({ ...props }) => {
     const { init } = useContext(SymfoniContext)
     const [showTransfers, setShowTransfers] = useState(false);
     const [showIssue, setShowIssue] = useState(false);
-    const [showExtensions, setShowExtensions] = useState(true);
+    const [showExtensions, setShowExtensions] = useState(false);
 
     return (
         <Box gap="small" direction="row">

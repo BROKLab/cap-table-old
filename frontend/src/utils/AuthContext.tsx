@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { validateNorwegianIdNumber } from 'norwegian-national-id-validator';
 import React, { useContext, useEffect, useState } from 'react';
 import { CurrentAddressContext, SignerContext } from '../hardhat/SymfoniContext';
-import { AuthProviderUser, GetBrregUnclaimedResponse, getChallengeToken, getUserMe, signChallengeAndVerify, unclaimed as _unclaimed } from './auth-provider';
+import { AuthProviderUser, GetBrregUnclaimedResponse, getChallengeToken, getUserMe, signChallengeAndVerify, unclaimed as _unclaimed, userNames } from './auth-provider';
 
 interface Props { }
 
@@ -12,15 +12,22 @@ interface AuthContext {
     logOut?: () => void
     unclaimed?: (contract: string, protocol: string, uuidHash: string) => Promise<GetBrregUnclaimedResponse>
     resolveAddressOrUUID?: (contract: string, protocol: string, uuidOrAddress: string) => Promise<string>
+    requestName?: (address: string) => void
 }
-
+interface NameContext {
+    [address: string]: string | null,
+}
 export const AuthContext = React.createContext<AuthContext>({})
+export const NameContext = React.createContext<NameContext>({})
+
 
 export const Auth: React.FC<Props> = ({ ...props }) => {
     const [signer] = useContext(SignerContext)
     const [address] = useContext(CurrentAddressContext)
     const [authToken, setAuthToken] = useState<string>();
     const [user, setUser] = useState<AuthProviderUser>();
+    const [unamedAddresses, setUnamedAddresses] = useState<string[]>([]);
+    const [address2name, setAddress2name] = useState<{ [address: string]: string | null }>({});
 
     // get auth token
     useEffect(() => {
@@ -79,6 +86,27 @@ export const Auth: React.FC<Props> = ({ ...props }) => {
         return () => { subscribed = false }
     }, [authToken])
 
+    useEffect(() => {
+        let subscribed = true
+        const interval = setTimeout(async () => {
+            if (unamedAddresses.length > 0 && authToken) {
+                console.log("unamedAddresses", unamedAddresses)
+                const res = await userNames(authToken, unamedAddresses)
+                if ("names" in res) {
+                    if (subscribed) {
+                        console.log("got names", res.names)
+                        setAddress2name(res.names)
+                        setUnamedAddresses([])
+                    }
+                }
+            }
+        }, 500)
+        return () => {
+            subscribed = false
+            clearTimeout(interval)
+        }
+    }, [unamedAddresses, authToken])
+
     const logOut = () => {
         setAuthToken(undefined)
         setUser(undefined)
@@ -86,6 +114,7 @@ export const Auth: React.FC<Props> = ({ ...props }) => {
             localStorage.removeItem("authToken")
         }
     }
+
     // Will return address if address or resolve UUID 
     const resolveAddressOrUUID = async (
         contract: string,
@@ -119,9 +148,17 @@ export const Auth: React.FC<Props> = ({ ...props }) => {
         return _unclaimed(authToken, contract, protocol, uuidHash)
     }
 
+    const requestName = (address: string) => {
+        if (!(address in address2name)) {
+            setUnamedAddresses(old => [...old, address])
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ authToken, user, logOut, unclaimed, resolveAddressOrUUID }}>
-            {props.children}
+        <AuthContext.Provider value={{ authToken, user, logOut, unclaimed, resolveAddressOrUUID, requestName }}>
+            <NameContext.Provider value={address2name}>
+                {props.children}
+            </NameContext.Provider>
         </AuthContext.Provider>
     )
 }
