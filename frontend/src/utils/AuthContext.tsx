@@ -29,13 +29,18 @@ export const Auth: React.FC<Props> = ({ ...props }) => {
     const [unamedAddresses, setUnamedAddresses] = useState<string[]>([]);
     const [address2name, setAddress2name] = useState<{ [address: string]: string | null }>({});
 
+    const shouldSaveToken = () => {
+        // return process.env.NODE_ENV === "development"
+        return true
+    }
+
     // get auth token
     useEffect(() => {
         let subscribed = true
         const doAsync = async () => {
             if (address && signer) {
                 try {
-                    if (process.env.NODE_ENV === "development") {
+                    if (shouldSaveToken()) {
                         const authToken = localStorage.getItem("authToken")
                         if (authToken) {
                             return setAuthToken(authToken)
@@ -45,12 +50,12 @@ export const Auth: React.FC<Props> = ({ ...props }) => {
                     const authToken = await signChallengeAndVerify(challengeToken, signer)
                     if (subscribed && authToken) {
                         setAuthToken(authToken)
-                        if (process.env.NODE_ENV === "development") {
+                        if (shouldSaveToken()) {
                             localStorage.setItem("authToken", authToken)
                         }
                     }
                 } catch (error) {
-                    if (process.env.NODE_ENV === "development" && subscribed && !authToken) {
+                    if (shouldSaveToken() && subscribed && !authToken) {
                         localStorage.removeItem("authToken")
                     }
                 }
@@ -74,7 +79,7 @@ export const Auth: React.FC<Props> = ({ ...props }) => {
                     }
                 } catch (error) {
                     console.log()
-                    if (process.env.NODE_ENV === "development") {
+                    if (shouldSaveToken()) {
                         localStorage.removeItem("authToken")
                     }
                 }
@@ -110,7 +115,7 @@ export const Auth: React.FC<Props> = ({ ...props }) => {
     const logOut = () => {
         setAuthToken(undefined)
         setUser(undefined)
-        if (process.env.NODE_ENV === "development") {
+        if (shouldSaveToken()) {
             localStorage.removeItem("authToken")
         }
     }
