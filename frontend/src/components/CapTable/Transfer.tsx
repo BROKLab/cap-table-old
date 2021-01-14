@@ -1,8 +1,9 @@
 import { BigNumberish, BytesLike, ethers } from 'ethers';
 import { Box, Button, Select, Text, TextInput } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
-import { AuthProviderContext, CurrentAddressContext, SignerContext, SymfoniContext } from '../../hardhat/SymfoniContext';
+import { SignerContext, SymfoniContext } from '../../hardhat/SymfoniContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
+import { SelectUser } from '../ui/SelectUser';
 
 interface Props {
     capTable: ERC1400
@@ -14,11 +15,10 @@ export const Transfer: React.FC<Props> = ({ ...props }) => {
     const [partitions, setPartitions] = useState<BytesLike[]>([]);
     const [partition, setPartition] = useState<BytesLike>();
     const [to, setTo] = useState<string>("");
-    const [amount, setAmount] = useState<BigNumberish>(ethers.constants.Zero);
+    const [amount, setAmount] = useState<number>(0);
     const [signer] = useContext(SignerContext)
     const { init } = useContext(SymfoniContext)
-    const [currentAddress] = useContext(CurrentAddressContext)
-    const authProvider = useContext(AuthProviderContext).instance?.attach(process.env.REACT_APP_AUTH_PROVIDER_ADDRESS ? process.env.REACT_APP_AUTH_PROVIDER_ADDRESS : ethers.constants.AddressZero)
+    // const authProvider = useContext(AuthProviderContext).instance?.attach(process.env.REACT_APP_AUTH_PROVIDER_ADDRESS ? process.env.REACT_APP_AUTH_PROVIDER_ADDRESS : ethers.constants.AddressZero)
     // Get partitions
     useEffect(() => {
         let subscribed = true
@@ -32,27 +32,14 @@ export const Transfer: React.FC<Props> = ({ ...props }) => {
         return () => { subscribed = false }
     }, [props.capTable])
 
-    useEffect(() => {
-        let subscribed = true
-        const doAsync = async () => {
-            if (authProvider) {
-                const auth = await authProvider.hasAuthenticated(currentAddress, Math.floor(Date.now() / 1000))
-                console.log(auth)
-            }
-            if (subscribed) {
-            }
-        };
-        doAsync();
-        return () => { subscribed = false }
-    }, [authProvider, currentAddress])
-
     const transfer = async () => {
         if (!signer)
             return init()
         if (!partition) return alert("Sett aksjeklasse")
         if (!to) return alert("Sett til addresse")
-        if (amount === ethers.constants.Zero) return alert("Kan ikke overføre 0 beløp")
-        const tx = await props.capTable.transferByPartition(partition, to, amount, "0x11",)
+        const amountEther = ethers.utils.parseEther(amount.toString())
+        if (amountEther === ethers.constants.Zero) return alert("Kan ikke overføre 0 beløp")
+        const tx = await props.capTable.transferByPartition(partition, to, amountEther, "0x11",)
         await tx.wait()
         if (props.done) props.done()
     }
@@ -61,13 +48,14 @@ export const Transfer: React.FC<Props> = ({ ...props }) => {
         <Box gap="small">
             <Box direction="row" gap="small">
                 <Box basis="100%">
-                    <Text size="small">Til Addresse</Text>
-                    <TextInput
+                    <Text size="small">Til fødselsnummer</Text>
+                    {/* <TextInput
                         style={{ minWidth: "100%" }}
                         placeholder="Til addresse"
                         value={to}
                         onChange={event => setTo(event.target.value)}
-                    />
+                    /> */}
+                    <SelectUser onChange={setTo} value={to} capTableAddress={props.capTable.address} protocol={"ERC1400:BRREG:TRANSFER"}></SelectUser>
                 </Box>
 
             </Box>
@@ -85,15 +73,15 @@ export const Transfer: React.FC<Props> = ({ ...props }) => {
                     <Text size="small">Beløp</Text>
                     <TextInput
                         placeholder="Antall aksjer"
-                        value={ethers.utils.formatEther(amount.toString())}
+                        value={amount}
                         type="number"
-                        onChange={event => setAmount(ethers.utils.parseEther(event.target.value.toString()))}
+                        onChange={(event) => setAmount(event.target.valueAsNumber)}
                     />
                 </Box>
             </Box>
 
             <Box>
-                <Button label="Overfør aksjer" onClick={() => transfer()}></Button>
+                <Button size="medium" label="Overfør aksjer" onClick={() => transfer()}></Button>
             </Box>
         </Box>
     )

@@ -150,7 +150,8 @@ export async function unclaimed(
   authToken: string,
   contract: string,
   protocol: string,
-  uuidHash: string
+  uuidHash: string,
+  name?: string
 ) {
   const res = await axios
     .get<GetBrregUnclaimedResponse>(authProviderURL() + "/brreg/unclaimed", {
@@ -161,6 +162,7 @@ export async function unclaimed(
         contract,
         protocol,
         uuidHash,
+        name,
       },
     })
     .catch((error: AxiosError<AuthProviderErrorResponse>) => {

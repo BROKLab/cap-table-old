@@ -11,7 +11,7 @@ interface AuthContext {
     user?: AuthProviderUser
     logOut?: () => void
     unclaimed?: (contract: string, protocol: string, uuidHash: string) => Promise<GetBrregUnclaimedResponse>
-    resolveAddressOrUUID?: (contract: string, protocol: string, uuidOrAddress: string) => Promise<string>
+    resolveAddressOrUUID?: (contract: string, protocol: string, uuidOrAddress: string, name?: string) => Promise<string>
     requestName?: (address: string) => void
 }
 interface NameContext {
@@ -124,7 +124,8 @@ export const Auth: React.FC<Props> = ({ ...props }) => {
     const resolveAddressOrUUID = async (
         contract: string,
         protocol: string,
-        uuidOrAddress: string
+        uuidOrAddress: string,
+        name?: string
     ) => {
         if (!authToken) {
             throw Error("Please authenticate before running this.")
@@ -135,7 +136,7 @@ export const Auth: React.FC<Props> = ({ ...props }) => {
             }
         }
         if (validateNorwegianIdNumber(uuidOrAddress)) {
-            const res = await _unclaimed(authToken, contract, protocol, ethers.utils.keccak256(ethers.utils.id(uuidOrAddress)))
+            const res = await _unclaimed(authToken, contract, protocol, ethers.utils.keccak256(ethers.utils.id(uuidOrAddress)), name)
             if (res) {
                 return res.address
             }
@@ -145,12 +146,13 @@ export const Auth: React.FC<Props> = ({ ...props }) => {
     const unclaimed = (
         contract: string,
         protocol: string,
-        uuidHash: string
+        uuidHash: string,
+        name?: string
     ) => {
         if (!authToken) {
             throw Error("Please authenticate before running this.")
         }
-        return _unclaimed(authToken, contract, protocol, uuidHash)
+        return _unclaimed(authToken, contract, protocol, uuidHash, name)
     }
 
     const requestName = (address: string) => {

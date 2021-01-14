@@ -13,7 +13,7 @@ interface Props {
 
 export const Actions: React.FC<Props> = ({ ...props }) => {
     const { init } = useContext(SymfoniContext)
-    const [showTransfers, setShowTransfers] = useState(false);
+    const [showTransfers, setShowTransfers] = useState(true);
     const [showIssue, setShowIssue] = useState(false);
     const [showExtensions, setShowExtensions] = useState(false);
 

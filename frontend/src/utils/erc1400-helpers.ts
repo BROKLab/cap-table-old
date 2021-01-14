@@ -49,7 +49,8 @@ export interface CollateralDetails {
 export const getERC1400Addresses = async (
   capTable: ERC1400,
   partitionFilter?: BytesLike,
-  fromBlock?: number
+  fromBlock?: number,
+  skipZeroBalances = true
 ) => {
   const _partitionFilter = partitionFilter ? partitionFilter : null;
   const _fromBlock = fromBlock ? fromBlock : 0;
@@ -65,7 +66,6 @@ export const getERC1400Addresses = async (
     _fromBlock,
     "latest"
   );
-  console.log("issueByPartition", issueByPartition);
   const transferByPartition = await capTable.queryFilter(
     capTable.filters.TransferByPartition(
       _partitionFilter,
@@ -79,7 +79,6 @@ export const getERC1400Addresses = async (
     _fromBlock,
     "latest"
   );
-  console.log("transferByPartition", transferByPartition);
   const redeemByPartition = await capTable.queryFilter(
     capTable.filters.RedeemedByPartition(
       _partitionFilter,
@@ -149,8 +148,13 @@ export const getERC1400Addresses = async (
         balance: balance,
       };
     });
-  const addresses = await Promise.all(results);
 
+  const addresses = await Promise.all(results);
+  if (skipZeroBalances) {
+    return addresses.filter((a) => {
+      return !a.balance.isZero();
+    });
+  }
   return addresses;
 };
 

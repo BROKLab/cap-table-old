@@ -5,7 +5,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { SignerContext, SymfoniContext } from '../../hardhat/SymfoniContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
-import { AuthContext } from '../../utils/AuthContext';
 import { Transaction } from '../../utils/ethers-helpers';
 import { SelectUser } from '../ui/SelectUser';
 
@@ -43,12 +42,10 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
     const [useDefaultPartitions, setUseDefaultPartitions] = useState(true);
     const [signer] = useContext(SignerContext)
     const { init } = useContext(SymfoniContext)
-    const { user, resolveAddressOrUUID } = useContext(AuthContext)
     const all = watch()
 
     useEffect(() => {
         console.log("all addr", all.address)
-
     }, [all])
 
     // Get partitions
@@ -73,16 +70,10 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
         if (!signer) {
             return init()
         }
-        if (!resolveAddressOrUUID) {
-            throw Error("Address or UUID resolver not ready")
-        }
-
         const txData = "0x11"
         if (props.transactions) {
             const txs = await Promise.all(createArrayWithNumbers(rows).map(async rowNr => {
-                const address = await resolveAddressOrUUID(props.capTable.address, "brreg:erc1400:demo", data.address[rowNr])
-                console.log("resolved address to", address)
-                return props.capTable.populateTransaction.issueByPartition(data.partition[rowNr], address, ethers.utils.parseEther(data.amount[rowNr]), txData, { gasLimit: 254955 * 1.2 })
+                return props.capTable.populateTransaction.issueByPartition(data.partition[rowNr], data.address[rowNr], ethers.utils.parseEther(data.amount[rowNr]), txData, { gasLimit: 254955 * 1.2 })
             }))
             return props.transactions(txs)
         } else {
@@ -91,9 +82,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
                 .reduce(async (prev, rowNr) => {
                     await prev
                     // TODO : Handle CDP
-                    const address = await resolveAddressOrUUID(props.capTable.address, "brreg:erc1400:demo", data.address[rowNr])
-                    console.log("resolved address to", address)
-                    const tx = await props.capTable.issueByPartition(data.partition[rowNr], address, ethers.utils.parseEther(data.amount[rowNr]), txData)
+                    const tx = await props.capTable.issueByPartition(data.partition[rowNr], data.address[rowNr], ethers.utils.parseEther(data.amount[rowNr]), txData)
                     await tx.wait()
                     return Promise.resolve()
                 }, Promise.resolve())
@@ -135,14 +124,14 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
             <form id={props.capTable.address} onSubmit={handleSubmit(onSubmitBatchIssue)}>
                 <Box gap="small">
                     <Grid columns={COLUMNS} fill="horizontal" gap="small">
-                        <Text size="small" weight="bold" truncate>Identifisering</Text>
+                        <Text size="small" weight="bold" truncate>Fødselsnummer</Text>
                         <Text size="small" weight="bold" truncate>Antall aksjer</Text>
                         <Text style={{ display: useDefaultPartitions ? "none" : "inherit" }} size="small" weight="bold" truncate>Partisjon</Text>
                     </Grid>
                     {createArrayWithNumbers(rows).map((rowNr) =>
                         <Grid columns={COLUMNS} fill="horizontal" gap="small" key={rowNr}>
                             <Box >
-                                <Controller render={({ onChange, value }) => <SelectUser onChange={onChange} value={value} user={user}></SelectUser>} name={`address[${rowNr}]`} control={control} rules={{ required: true }} defaultValue={""} />
+                                <Controller render={({ onChange, value }) => <SelectUser onChange={onChange} value={value} capTableAddress={props.capTable.address} protocol={"ERC1400:BRREG:DEMO"}></SelectUser>} name={`address[${rowNr}]`} control={control} rules={{ required: true }} defaultValue={""} />
                                 {errors["address"] && errors["address"][rowNr] && <Text color="red" size="xsmall">* {errors["address"][rowNr]?.type}</Text>}
                             </Box>
                             <Box >
