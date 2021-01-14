@@ -18,53 +18,6 @@ export class IAuthProvider__factory {
 
 const _abi = [
   {
-    constant: false,
-    inputs: [
-      {
-        name: "addr",
-        type: "address",
-      },
-    ],
-    name: "authenticate",
-    outputs: [],
-    payable: false,
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: "addr",
-        type: "address",
-      },
-    ],
-    name: "ttl",
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-      },
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "controllers",
-    outputs: [
-      {
-        name: "",
-        type: "address[]",
-      },
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     constant: true,
     inputs: [
       {
@@ -72,7 +25,7 @@ const _abi = [
         type: "address",
       },
       {
-        name: "timestamp",
+        name: "latestAcceptedTimestamp",
         type: "uint256",
       },
     ],
@@ -85,39 +38,6 @@ const _abi = [
     ],
     payable: false,
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: "addr",
-        type: "address",
-      },
-    ],
-    name: "isAuthenticated",
-    outputs: [
-      {
-        name: "",
-        type: "bool",
-      },
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: "operators",
-        type: "address[]",
-      },
-    ],
-    name: "setControllers",
-    outputs: [],
-    payable: false,
-    stateMutability: "nonpayable",
     type: "function",
   },
 ];

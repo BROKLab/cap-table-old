@@ -1,4 +1,4 @@
-import { BigNumberish, BytesLike, ethers } from 'ethers';
+import { BytesLike, ethers } from 'ethers';
 import { Box, Button, Select, Text, TextInput } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
 import { SignerContext, SymfoniContext } from '../../hardhat/SymfoniContext';

@@ -93,7 +93,8 @@ export const SelectUser: React.FC<Props> = ({ ...props }) => {
     }
 
     const nameResolvedIcon = () => {
-        const color = acceptedName() ? "green" : "orange"
+        let color = acceptedName() ? "orange" : "red"
+        color = validAddress() ? "green" : color;
         return validAddress() ? <Lock color={color}></Lock> : <Unlock color={color}></Unlock>
     }
 
