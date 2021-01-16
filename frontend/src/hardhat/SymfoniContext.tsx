@@ -179,7 +179,9 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         }
     };
     const getWeb3ModalProvider = async (): Promise<any> => {
-        const providerOptions: IProviderOptions = {};
+        const providerOptions: IProviderOptions = {
+
+        };
         const web3Modal = new Web3Modal({
             // network: "mainnet",
             cacheProvider: true,

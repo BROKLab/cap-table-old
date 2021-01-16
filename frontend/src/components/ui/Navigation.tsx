@@ -5,6 +5,7 @@ import { Account } from './Account';
 
 import BRREG_LOGO_SVG from './../../assets/brreg_logo.svg'
 import BRREG_LOGO_SMALL_PNG from './../../assets/brreg_logo.png'
+import { WalletConnect } from '../../utils/WalletConnect';
 
 
 
@@ -37,6 +38,7 @@ export const Navigation: React.FC<Props> = () => {
             </Box>
             <Box direction="row" gap="small" >
                 <Account></Account>
+                <WalletConnect></WalletConnect>
             </Box>
         </Header>
     )

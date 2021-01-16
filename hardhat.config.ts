@@ -34,6 +34,13 @@ const config: HardhatUserConfig = {
       "AuthProvider",
     ],
     fallbackProvider: "brreg",
+    // providerOptions: {
+    //   walletconnect: {
+    //     options: {
+    //       infuraId: "c229331f1d044c8f95e03f54b0ea2f26",
+    //     },
+    //   },
+    // },
   },
   networks: {
     brreg: {
