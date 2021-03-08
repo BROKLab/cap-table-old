@@ -65,7 +65,7 @@ export const List: React.FC<Props> = ({ ...props }) => {
                 columns={[
                     {
                         property: 'uuid',
-                        header: <Text>Forslått ID</Text>,
+                        header: <Text>Orgnr</Text>,
                         render: (data) => ethers.utils.parseBytes32String(data.uuid)
                     },
                     // {
@@ -79,12 +79,12 @@ export const List: React.FC<Props> = ({ ...props }) => {
                         header: <Text>Status</Text>,
                         render: (data) => getStatus(data.status.toNumber())
                     },
-                    {
-                        property: 'address',
-                        header: <Text>Identifikator</Text>,
-                        primary: true,
-                        render: (data) => FormatAddress({ address: data.address })
-                    },
+                    // {
+                    //     property: 'address',
+                    //     header: <Text>Identifikator</Text>,
+                    //     primary: true,
+                    //     render: (data) => FormatAddress({ address: data.address })
+                    // },
                     {
                         property: 'actions',
                         header: <Text>...</Text>,
