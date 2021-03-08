@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { CapTableQue } from '../../hardhat/typechain/CapTableQue';
 import { getStatus } from '../../utils/que-helpers';
-import { FormatAddress } from '../ui/FormatAddress';
 
 interface Props {
     capTableQue: CapTableQue
