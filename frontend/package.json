@@ -15,7 +15,7 @@
     "axios": "^0.21.0",
     "clipboard-copy": "^4.0.1",
     "ethers": "^5.0.17",
-    "grommet": "2.15.2",
+    "grommet": "^2.17.1",
     "grommet-icons": "^4.5.0",
     "norwegian-national-id-validator": "^3.0.0",
     "react": "^16.14.0",
