@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { List } from '../components/Que/List';
 import { Loading } from '../components/ui/Loading';
-import { CapTableQueContext } from '../hardhat/SymfoniContext';
+import { CapTableQueContext } from '../hardhat/ForvaltContext';
 
 interface Props {
 }

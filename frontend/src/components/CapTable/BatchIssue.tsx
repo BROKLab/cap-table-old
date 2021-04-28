@@ -3,7 +3,7 @@ import { Box, Button, Grid, Select, Text, TextInput } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { SignerContext, SymfoniContext } from '../../hardhat/SymfoniContext';
+import { SignerContext, SymfoniContext } from '../../hardhat/ForvaltContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { Transaction } from '../../utils/ethers-helpers';
 import { SelectUser } from '../ui/SelectUser';

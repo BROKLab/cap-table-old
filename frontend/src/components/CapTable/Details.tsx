@@ -1,7 +1,7 @@
 import { Box, Heading } from 'grommet';
 
 import React, { useContext } from 'react';
-import { SignerContext } from '../../hardhat/SymfoniContext';
+import { SignerContext } from '../../hardhat/ForvaltContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { Actions } from './Actions';
 import { Balances } from './Balances';

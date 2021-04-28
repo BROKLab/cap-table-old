@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { Box, Grid, Text } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
-import { CapTableQueContext, CapTableRegistryContext, CurrentAddressContext } from '../../hardhat/SymfoniContext';
+import { CapTableQueContext, CapTableRegistryContext, CurrentAddressContext } from '../../hardhat/ForvaltContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { CapTableQueDetails } from './Que/CapTableQueDetails';
 

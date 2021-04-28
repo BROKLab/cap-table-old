@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Theme } from "./assets/Theme";
 import { Navigation } from './components/ui/Navigation';
-import { Symfoni } from "./hardhat/SymfoniContext";
+import { Symfoni } from "./hardhat/ForvaltContext";
 import { AccountPage } from "./pages/AccountPage";
 import { CapTableCreatePage } from "./pages/CapTableCreatePage";
 import { CapTablePage } from "./pages/CapTablePage";
@@ -19,7 +19,7 @@ function App() {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Grommet theme={Theme} full={true}>
-        <Symfoni autoInit={true} showLoading={true}>
+        <Symfoni autoInit={false} showLoading={true}>
           <Auth>
             <Box height={{ min: "100vh" }}>
               {/* Navigation */}

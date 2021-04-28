@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { Box, Button, Card, CardBody, CardFooter, Heading, Paragraph, Text } from 'grommet';
 import { UserPolice } from 'grommet-icons';
 import React, { useContext, useEffect } from 'react';
-import { ERC1400AuthValidatorContext, ERC1820RegistryContext } from '../../hardhat/SymfoniContext';
+import { ERC1400AuthValidatorContext, ERC1820RegistryContext } from '../../hardhat/ForvaltContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 
 interface Props {

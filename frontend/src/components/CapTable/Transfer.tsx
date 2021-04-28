@@ -1,7 +1,7 @@
 import { BytesLike, ethers } from 'ethers';
 import { Box, Button, Select, Text, TextInput } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
-import { SignerContext, SymfoniContext } from '../../hardhat/SymfoniContext';
+import { SignerContext, SymfoniContext } from '../../hardhat/ForvaltContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { SelectUser } from '../ui/SelectUser';
 

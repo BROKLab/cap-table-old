@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, Button, Grid, Text, TextInput } from 'grommet';
 import { CapTableQue } from '../../hardhat/typechain/CapTableQue';
-import { CurrentAddressContext, SymfoniContext } from '../../hardhat/SymfoniContext';
+import { CurrentAddressContext, SymfoniContext } from '../../hardhat/ForvaltContext';
 import { Checkmark, Clear } from 'grommet-icons';
 import { ethers } from 'ethers';
 

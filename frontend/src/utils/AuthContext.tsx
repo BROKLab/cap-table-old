@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { validateNorwegianIdNumber } from 'norwegian-national-id-validator';
 import React, { useContext, useEffect, useState } from 'react';
-import { CurrentAddressContext, SignerContext } from '../hardhat/SymfoniContext';
+import { CurrentAddressContext, SignerContext } from '../hardhat/ForvaltContext';
 import { AuthProviderUser, GetBrregUnclaimedResponse, getChallengeToken, getUserMe, signChallengeAndVerify, unclaimed as _unclaimed, userNames } from './auth-provider';
 
 interface Props { }

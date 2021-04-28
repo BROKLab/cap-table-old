@@ -3,7 +3,7 @@ import { Box, Button } from 'grommet';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { Modal } from '../ui/Modal';
 import { Transfer } from './Transfer';
-import { SymfoniContext } from '../../hardhat/SymfoniContext';
+import { SymfoniContext } from '../../hardhat/ForvaltContext';
 import { BatchIssue } from './BatchIssue';
 import { Extensions } from './Extensions';
 

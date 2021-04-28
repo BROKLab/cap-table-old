@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { BatchIssue } from '../components/CapTable/BatchIssue';
 import { CapTableCreate } from '../components/CapTable/CapTableCreate';
 import { Loading } from '../components/ui/Loading';
-import { ERC1400Context, SignerContext, SymfoniContext } from '../hardhat/SymfoniContext';
+import { ERC1400Context, SignerContext, SymfoniContext } from '../hardhat/ForvaltContext';
 import { Transaction } from '../utils/ethers-helpers';
 
 interface Props {

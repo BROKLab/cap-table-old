@@ -3,7 +3,7 @@ import { Checkmark, CircleQuestion } from 'grommet-icons';
 import React, { useContext, useState } from 'react';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { CopyText } from '../components/ui/CopyText';
-import { SymfoniContext } from '../hardhat/SymfoniContext';
+import { SymfoniContext } from '../hardhat/ForvaltContext';
 
 
 interface Props {

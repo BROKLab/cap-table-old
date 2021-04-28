@@ -4,18 +4,20 @@
 import { providers, Signer, ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import Web3Modal, { IProviderOptions } from "web3modal";
-import { ERC1400 } from "./typechain/ERC1400";
-import { ERC1400__factory } from "./typechain/factories/ERC1400__factory";
 import { AuthProvider } from "./typechain/AuthProvider";
 import { AuthProvider__factory } from "./typechain/factories/AuthProvider__factory";
+import { ERC1400 } from "./typechain/ERC1400";
+import { ERC1400__factory } from "./typechain/factories/ERC1400__factory";
 import { ERC1820Registry } from "./typechain/ERC1820Registry";
 import { ERC1820Registry__factory } from "./typechain/factories/ERC1820Registry__factory";
-import { CapTableRegistry } from "./typechain/CapTableRegistry";
-import { CapTableRegistry__factory } from "./typechain/factories/CapTableRegistry__factory";
 import { CapTableQue } from "./typechain/CapTableQue";
 import { CapTableQue__factory } from "./typechain/factories/CapTableQue__factory";
+import { CapTableRegistry } from "./typechain/CapTableRegistry";
+import { CapTableRegistry__factory } from "./typechain/factories/CapTableRegistry__factory";
 import { ERC1400AuthValidator } from "./typechain/ERC1400AuthValidator";
 import { ERC1400AuthValidator__factory } from "./typechain/factories/ERC1400AuthValidator__factory";
+import WalletConnectQrcodeModal from "@walletconnect/qrcode-modal";
+import { SIGNER_EVENTS, WalletConnectSigner } from "@symfoni/walletconnect-v2-ethers-signer";
 
 const emptyContract = {
     instance: undefined,
@@ -35,11 +37,11 @@ const defaultSymfoniContext: SymfoniContextInterface = {
     providers: []
 };
 export const SymfoniContext = React.createContext<SymfoniContextInterface>(defaultSymfoniContext);
-export const ERC1400Context = React.createContext<SymfoniERC1400>(emptyContract);
 export const AuthProviderContext = React.createContext<SymfoniAuthProvider>(emptyContract);
+export const ERC1400Context = React.createContext<SymfoniERC1400>(emptyContract);
 export const ERC1820RegistryContext = React.createContext<SymfoniERC1820Registry>(emptyContract);
-export const CapTableRegistryContext = React.createContext<SymfoniCapTableRegistry>(emptyContract);
 export const CapTableQueContext = React.createContext<SymfoniCapTableQue>(emptyContract);
+export const CapTableRegistryContext = React.createContext<SymfoniCapTableRegistry>(emptyContract);
 export const ERC1400AuthValidatorContext = React.createContext<SymfoniERC1400AuthValidator>(emptyContract);
 
 export interface SymfoniContextInterface {
@@ -56,14 +58,14 @@ export interface SymfoniProps {
     loadingComponent?: React.ReactNode;
 }
 
-export interface SymfoniERC1400 {
-    instance?: ERC1400;
-    factory?: ERC1400__factory;
-}
-
 export interface SymfoniAuthProvider {
     instance?: AuthProvider;
     factory?: AuthProvider__factory;
+}
+
+export interface SymfoniERC1400 {
+    instance?: ERC1400;
+    factory?: ERC1400__factory;
 }
 
 export interface SymfoniERC1820Registry {
@@ -71,14 +73,14 @@ export interface SymfoniERC1820Registry {
     factory?: ERC1820Registry__factory;
 }
 
-export interface SymfoniCapTableRegistry {
-    instance?: CapTableRegistry;
-    factory?: CapTableRegistry__factory;
-}
-
 export interface SymfoniCapTableQue {
     instance?: CapTableQue;
     factory?: CapTableQue__factory;
+}
+
+export interface SymfoniCapTableRegistry {
+    instance?: CapTableRegistry;
+    factory?: CapTableRegistry__factory;
 }
 
 export interface SymfoniERC1400AuthValidator {
@@ -98,13 +100,13 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     const [signer, setSigner] = useState<Signer | undefined>(defaultSigner);
     const [provider, setProvider] = useState<providers.Provider | undefined>(defaultProvider);
     const [currentAddress, setCurrentAddress] = useState<string>(defaultCurrentAddress);
-    const [fallbackProvider] = useState<string | undefined>("brreg");
-    const [providerPriority, setProviderPriority] = useState<string[]>(["web3modal", "hardhat"]);
-    const [ERC1400, setERC1400] = useState<SymfoniERC1400>(emptyContract);
+    const [fallbackProvider] = useState<string | undefined>("hardhat");
+    const [providerPriority, setProviderPriority] = useState<string[]>(["hardhat", "web3modal"]);
     const [AuthProvider, setAuthProvider] = useState<SymfoniAuthProvider>(emptyContract);
+    const [ERC1400, setERC1400] = useState<SymfoniERC1400>(emptyContract);
     const [ERC1820Registry, setERC1820Registry] = useState<SymfoniERC1820Registry>(emptyContract);
-    const [CapTableRegistry, setCapTableRegistry] = useState<SymfoniCapTableRegistry>(emptyContract);
     const [CapTableQue, setCapTableQue] = useState<SymfoniCapTableQue>(emptyContract);
+    const [CapTableRegistry, setCapTableRegistry] = useState<SymfoniCapTableRegistry>(emptyContract);
     const [ERC1400AuthValidator, setERC1400AuthValidator] = useState<SymfoniERC1400AuthValidator>(emptyContract);
     useEffect(() => {
         if (messages.length > 0)
@@ -155,15 +157,27 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return provider ? { provider, hardhatProviderName } : undefined
     };
     const getSigner = async (_provider: providers.Provider, hardhatProviderName: string): Promise<Signer | undefined> => {
-        switch (hardhatProviderName) {
-            case "web3modal":
-                const web3provider = _provider as ethers.providers.Web3Provider
-                return await web3provider.getSigner()
-            case "hardhat":
-                return ethers.Wallet.fromMnemonic("test test test test test test test test test test test junk").connect(_provider)
-            default:
-                return undefined
-        }
+        const _signer = new WalletConnectSigner({
+            qrModal: false,
+        }).connect(_provider);
+
+        await new Promise<void>(async (resolve) => {
+            _signer.on(SIGNER_EVENTS.uri, ({ uri }: { uri: string }) => {
+                WalletConnectQrcodeModal.open(uri, (res: any) => {
+                    console.log("Opneed, ", res);
+                })
+            });
+            _signer.on("open", () => {
+                WalletConnectQrcodeModal.close()
+                resolve()
+            });
+
+            await _signer.open();
+
+        })
+        console.log("returning signer");
+
+        return _signer
     };
     const getWeb3ModalProvider = async (): Promise<any> => {
         const providerOptions: IProviderOptions = {
@@ -185,25 +199,26 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                 setMessages(old => [...old, text])
             }
             const finishWithContracts = (text: string) => {
-                setERC1400(getERC1400(_provider, _signer))
                 setAuthProvider(getAuthProvider(_provider, _signer))
+                setERC1400(getERC1400(_provider, _signer))
                 setERC1820Registry(getERC1820Registry(_provider, _signer))
-                setCapTableRegistry(getCapTableRegistry(_provider, _signer))
                 setCapTableQue(getCapTableQue(_provider, _signer))
+                setCapTableRegistry(getCapTableRegistry(_provider, _signer))
                 setERC1400AuthValidator(getERC1400AuthValidator(_provider, _signer))
                 finish(text)
             }
-            if (!autoInit && initializeCounter === 0) return finish("Auto init turned off.")
             setLoading(true)
             setMessages(old => [...old, "Initiating Symfoni React"])
             const providerObject = await getProvider() // getProvider can actually return undefined, see issue https://github.com/microsoft/TypeScript/issues/11094
 
             if (!subscribed || !providerObject) return finish("No provider or signer.")
             const _provider = providerObject.provider
+            let _signer: Signer | undefined = undefined
             setProvider(_provider)
             setMessages(old => [...old, "Useing " + providerObject.hardhatProviderName])
             setCurrentHardhatProvider(providerObject.hardhatProviderName)
-            const _signer = await getSigner(_provider, providerObject.hardhatProviderName);
+            if (!autoInit && initializeCounter === 0) return finishWithContracts("Auto init turned off.")
+            _signer = await getSigner(_provider, providerObject.hardhatProviderName);
 
             if (!subscribed || !_signer) return finishWithContracts("Provider, without signer.")
             setSigner(_signer)
@@ -219,20 +234,20 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return () => { subscribed = false }
     }, [initializeCounter])
 
-    const getERC1400 = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? ERC1400__factory.connect(ethers.constants.AddressZero, _signer) : ERC1400__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniERC1400 = {
-            instance: instance,
-            factory: _signer ? new ERC1400__factory(_signer) : undefined,
-        }
-        return contract
-    }
-        ;
     const getAuthProvider = (_provider: providers.Provider, _signer?: Signer) => {
         let instance = _signer ? AuthProvider__factory.connect(ethers.constants.AddressZero, _signer) : AuthProvider__factory.connect(ethers.constants.AddressZero, _provider)
         const contract: SymfoniAuthProvider = {
             instance: instance,
             factory: _signer ? new AuthProvider__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getERC1400 = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? ERC1400__factory.connect(ethers.constants.AddressZero, _signer) : ERC1400__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniERC1400 = {
+            instance: instance,
+            factory: _signer ? new ERC1400__factory(_signer) : undefined,
         }
         return contract
     }
@@ -246,17 +261,6 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return contract
     }
         ;
-    const getCapTableRegistry = (_provider: providers.Provider, _signer?: Signer) => {
-
-        const contractAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
-        const instance = _signer ? CapTableRegistry__factory.connect(contractAddress, _signer) : CapTableRegistry__factory.connect(contractAddress, _provider)
-        const contract: SymfoniCapTableRegistry = {
-            instance: instance,
-            factory: _signer ? new CapTableRegistry__factory(_signer) : undefined,
-        }
-        return contract
-    }
-        ;
     const getCapTableQue = (_provider: providers.Provider, _signer?: Signer) => {
 
         const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
@@ -264,6 +268,17 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         const contract: SymfoniCapTableQue = {
             instance: instance,
             factory: _signer ? new CapTableQue__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getCapTableRegistry = (_provider: providers.Provider, _signer?: Signer) => {
+
+        const contractAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+        const instance = _signer ? CapTableRegistry__factory.connect(contractAddress, _signer) : CapTableRegistry__factory.connect(contractAddress, _provider)
+        const contract: SymfoniCapTableRegistry = {
+            instance: instance,
+            factory: _signer ? new CapTableRegistry__factory(_signer) : undefined,
         }
         return contract
     }
@@ -291,11 +306,11 @@ export const Symfoni: React.FC<SymfoniProps> = ({
             <ProviderContext.Provider value={[provider, setProvider]}>
                 <SignerContext.Provider value={[signer, setSigner]}>
                     <CurrentAddressContext.Provider value={[currentAddress, setCurrentAddress]}>
-                        <ERC1400Context.Provider value={ERC1400}>
-                            <AuthProviderContext.Provider value={AuthProvider}>
+                        <AuthProviderContext.Provider value={AuthProvider}>
+                            <ERC1400Context.Provider value={ERC1400}>
                                 <ERC1820RegistryContext.Provider value={ERC1820Registry}>
-                                    <CapTableRegistryContext.Provider value={CapTableRegistry}>
-                                        <CapTableQueContext.Provider value={CapTableQue}>
+                                    <CapTableQueContext.Provider value={CapTableQue}>
+                                        <CapTableRegistryContext.Provider value={CapTableRegistry}>
                                             <ERC1400AuthValidatorContext.Provider value={ERC1400AuthValidator}>
                                                 {showLoading && loading ?
                                                     props.loadingComponent
@@ -308,11 +323,11 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                                                     : props.children
                                                 }
                                             </ERC1400AuthValidatorContext.Provider >
-                                        </CapTableQueContext.Provider >
-                                    </CapTableRegistryContext.Provider >
+                                        </CapTableRegistryContext.Provider >
+                                    </CapTableQueContext.Provider >
                                 </ERC1820RegistryContext.Provider >
-                            </AuthProviderContext.Provider >
-                        </ERC1400Context.Provider >
+                            </ERC1400Context.Provider >
+                        </AuthProviderContext.Provider >
                     </CurrentAddressContext.Provider>
                 </SignerContext.Provider>
             </ProviderContext.Provider>

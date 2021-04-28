@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 import { Details } from '../components/CapTable/Details';
 import { Loading } from '../components/ui/Loading';
-import { ERC1400Context } from '../hardhat/SymfoniContext';
+import { ERC1400Context } from '../hardhat/ForvaltContext';
 
 interface Props {
 }
