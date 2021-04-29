@@ -19,7 +19,7 @@ function App() {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Grommet theme={Theme} full={true}>
-        <Symfoni autoInit={false} showLoading={true}>
+        <Symfoni autoInit={true} showLoading={true}>
           <Auth>
             <Box height={{ min: "100vh" }}>
               {/* Navigation */}

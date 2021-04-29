@@ -19,8 +19,7 @@ enum STEP {
 }
 
 export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
-    const [signer] = useContext(SignerContext)
-    const { init } = useContext(SymfoniContext)
+    const { init, signer } = useContext(SymfoniContext)
     const [step, setStep] = useState(STEP.SELECT_COMPANY);
     const [transactions, setTransactions] = useState<{ [step in STEP]: Transaction[] }>({
         0: [],
@@ -39,13 +38,15 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
         handleTransactions(txs, STEP.SELECT_COMPANY)
     }
     const handleTransactions = async (txs: Transaction[], step: STEP) => {
-        if (!signer) throw Error("NO signer")
+        if (!signer) {
+            return init({ forceSigner: true })
+        }
         setStep(step + 1)
         setTransactions(old => ({ ...old, [step]: [...txs] }))
     }
 
     const deploy = async () => {
-        if (!signer) return init()
+        if (!signer) return init({ forceSigner: true })
         setDeploying(true)
         let deployedContract: string | undefined = undefined
         await Object.values(transactions).reduce(async (prev, txs) => {
@@ -68,6 +69,9 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
     return (
         <Box gap="small" >
             <Heading>Opprett aksjeeierbok</Heading>
+            {!signer &&
+                <Box><Text>Du må tilkoble en signer</Text></Box>
+            }
             <Accordion justify="start" activeIndex={step} gap="small">
                 <AccordionPanel label="1. Velg selskap" onClickCapture={() => setStep(STEP.SELECT_COMPANY)}>
                     <Box pad="small">
