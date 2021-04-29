@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { validateNorwegianIdNumber } from 'norwegian-national-id-validator';
 import React, { useContext, useEffect, useState } from 'react';
-import { CurrentAddressContext, SignerContext } from '../hardhat/ForvaltContext';
+import { SymfoniContext } from '../hardhat/ForvaltContext';
 import { AuthProviderUser, GetBrregUnclaimedResponse, getChallengeToken, getUserMe, signChallengeAndVerify, unclaimed as _unclaimed, userNames } from './auth-provider';
 
 interface Props { }
@@ -22,8 +22,7 @@ export const NameContext = React.createContext<NameContext>({})
 
 
 export const Auth: React.FC<Props> = ({ ...props }) => {
-    const [signer] = useContext(SignerContext)
-    const [address] = useContext(CurrentAddressContext)
+    const { signer, address } = useContext(SymfoniContext)
     const [authToken, setAuthToken] = useState<string>();
     const [user, setUser] = useState<AuthProviderUser>();
     const [unamedAddresses, setUnamedAddresses] = useState<string[]>([]);

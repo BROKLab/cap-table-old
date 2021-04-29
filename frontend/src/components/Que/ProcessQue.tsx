@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Box, Button, Grid, Text, TextInput } from 'grommet';
-import { CapTableQue } from '../../hardhat/typechain/CapTableQue';
-import { CurrentAddressContext, SymfoniContext } from '../../hardhat/ForvaltContext';
-import { Checkmark, Clear } from 'grommet-icons';
 import { ethers } from 'ethers';
+import { Box, Button, Grid, Text, TextInput } from 'grommet';
+import { Checkmark, Clear } from 'grommet-icons';
+import React, { useContext, useEffect, useState } from 'react';
+import { SymfoniContext } from '../../hardhat/ForvaltContext';
+import { CapTableQue } from '../../hardhat/typechain/CapTableQue';
 
 interface Props {
     capTableQue: CapTableQue,
@@ -12,7 +12,7 @@ interface Props {
 
 export const ProcessQue: React.FC<Props> = ({ ...props }) => {
     const [isAdmin, setIsAdmin] = useState(false);
-    const [currentAddress] = useContext(CurrentAddressContext)
+    const { address: currentAddress } = useContext(SymfoniContext)
     const { init } = useContext(SymfoniContext)
     const [reason, setReason] = useState("");
 
@@ -20,7 +20,7 @@ export const ProcessQue: React.FC<Props> = ({ ...props }) => {
         let subscribed = true
         const doAsync = async () => {
             const controllers = await props.capTableQue.controllers()
-            if (subscribed) {
+            if (subscribed && currentAddress) {
                 setIsAdmin(controllers.indexOf(currentAddress) !== -1)
             }
         };

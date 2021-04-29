@@ -1,14 +1,14 @@
 import { providers, Signer } from "ethers";
-import { SymfoniERC1400 } from "../ForvaltContext";
-import { ERC1400__factory } from "./../typechain/factories/ERC1400__factory";
+import { SymfoniERC1820Registry } from "../ForvaltContext";
+import { ERC1820Registry__factory } from "../typechain/factories/ERC1820Registry__factory";
 
-export function getERC1400(
+export function getERC1820Registry(
   provider: providers.Provider,
   chainId: number,
   connect: (address: string) => void,
   signer?: Signer,
   address?: string
-): SymfoniERC1400 {
+): SymfoniERC1820Registry {
   const addresses: { [chainId: number]: string } = {};
   if (address) {
     addresses[chainId] = address;
@@ -16,13 +16,13 @@ export function getERC1400(
   const instance = () => {
     if (chainId in addresses) {
       return signer
-        ? ERC1400__factory.connect(addresses[chainId], signer)
-        : ERC1400__factory.connect(addresses[chainId], provider);
+        ? ERC1820Registry__factory.connect(addresses[chainId], signer)
+        : ERC1820Registry__factory.connect(addresses[chainId], provider);
     }
     return undefined;
   };
   const factory = () => {
-    return signer ? new ERC1400__factory(signer) : undefined;
+    return signer ? new ERC1820Registry__factory(signer) : undefined;
   };
   return {
     instance: instance(),

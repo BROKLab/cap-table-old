@@ -1,14 +1,14 @@
 import { providers, Signer } from "ethers";
-import { SymfoniERC1400 } from "../ForvaltContext";
-import { ERC1400__factory } from "./../typechain/factories/ERC1400__factory";
+import { SymfoniAuthProvider } from "../ForvaltContext";
+import { AuthProvider__factory } from "../typechain/factories/AuthProvider__factory";
 
-export function getERC1400(
+export function getAuthProvider(
   provider: providers.Provider,
   chainId: number,
   connect: (address: string) => void,
   signer?: Signer,
   address?: string
-): SymfoniERC1400 {
+): SymfoniAuthProvider {
   const addresses: { [chainId: number]: string } = {};
   if (address) {
     addresses[chainId] = address;
@@ -16,13 +16,13 @@ export function getERC1400(
   const instance = () => {
     if (chainId in addresses) {
       return signer
-        ? ERC1400__factory.connect(addresses[chainId], signer)
-        : ERC1400__factory.connect(addresses[chainId], provider);
+        ? AuthProvider__factory.connect(addresses[chainId], signer)
+        : AuthProvider__factory.connect(addresses[chainId], provider);
     }
     return undefined;
   };
   const factory = () => {
-    return signer ? new ERC1400__factory(signer) : undefined;
+    return signer ? new AuthProvider__factory(signer) : undefined;
   };
   return {
     instance: instance(),

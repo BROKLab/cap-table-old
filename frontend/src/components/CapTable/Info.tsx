@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { Box, Grid, Text } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
-import { CapTableQueContext, CapTableRegistryContext, CurrentAddressContext } from '../../hardhat/ForvaltContext';
+import { CapTableQueContext, CapTableRegistryContext, SymfoniContext } from '../../hardhat/ForvaltContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { CapTableQueDetails } from './Que/CapTableQueDetails';
 
@@ -25,7 +25,7 @@ export const Info: React.FC<Props> = ({ capTable, ...pops }) => {
     const [registryData, setRegistryData] = useState<CapTableRegistryData>();
     const capTableRegistry = useContext(CapTableRegistryContext)
     const capTableQue = useContext(CapTableQueContext)
-    const [currentAddress] = useContext(CurrentAddressContext)
+    const { address: currentAddress } = useContext(SymfoniContext)
 
 
     useEffect(() => {

@@ -3,7 +3,7 @@ import { Box, Button, Grid, Select, Text, TextInput } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { SignerContext, SymfoniContext } from '../../hardhat/ForvaltContext';
+import { SymfoniContext } from '../../hardhat/ForvaltContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { Transaction } from '../../utils/ethers-helpers';
 import { SelectUser } from '../ui/SelectUser';
@@ -40,8 +40,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
     const [partitions, setPartitions] = useState<BytesLike[]>(DEFAULT_PARTITIONS);
     const [newPartition, setNewPartition] = useState("");
     const [useDefaultPartitions, setUseDefaultPartitions] = useState(true);
-    const [signer] = useContext(SignerContext)
-    const { init } = useContext(SymfoniContext)
+    const { init, signer } = useContext(SymfoniContext)
     const all = watch()
 
     useEffect(() => {
@@ -68,7 +67,7 @@ export const BatchIssue: React.FC<Props> = ({ ...props }) => {
     const onSubmitBatchIssue = async (data: FormData) => {
         console.log("onSubmit=>", data);
         if (!signer) {
-            return init()
+            return init({ forceSigner: true })
         }
         const txData = "0x11"
         if (props.transactions) {

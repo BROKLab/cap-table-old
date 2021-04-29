@@ -1,12 +1,5 @@
 import { providers, Signer } from "ethers";
-import {
-  SymfoniCapTableQue,
-  SymfoniCapTableRegistry,
-  SymfoniERC1400AuthValidator,
-} from "../ForvaltContext";
-import { AuthProvider__factory } from "../typechain/factories/AuthProvider__factory";
-import { CapTableQue__factory } from "../typechain/factories/CapTableQue__factory";
-import { CapTableRegistry__factory } from "../typechain/factories/CapTableRegistry__factory";
+import { SymfoniERC1400AuthValidator } from "../ForvaltContext";
 import { ERC1400AuthValidator__factory } from "../typechain/factories/ERC1400AuthValidator__factory";
 
 export function getERC1400AuthValidator(
