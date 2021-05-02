@@ -1,7 +1,7 @@
 import { BytesLike, ethers } from 'ethers';
 import { Box, Button, Select, Text, TextInput } from 'grommet';
 import React, { useContext, useEffect, useState } from 'react';
-import { SignerContext, SymfoniContext } from '../../hardhat/ForvaltContext';
+import { SymfoniContext } from '../../hardhat/ForvaltContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { SelectUser } from '../ui/SelectUser';
 
@@ -16,8 +16,7 @@ export const Transfer: React.FC<Props> = ({ ...props }) => {
     const [partition, setPartition] = useState<BytesLike>();
     const [to, setTo] = useState<string>("");
     const [amount, setAmount] = useState<number>(0);
-    const [signer] = useContext(SignerContext)
-    const { init } = useContext(SymfoniContext)
+    const { init, signer } = useContext(SymfoniContext)
     // const authProvider = useContext(AuthProviderContext).instance?.attach(process.env.REACT_APP_AUTH_PROVIDER_ADDRESS ? process.env.REACT_APP_AUTH_PROVIDER_ADDRESS : ethers.constants.AddressZero)
     // Get partitions
     useEffect(() => {

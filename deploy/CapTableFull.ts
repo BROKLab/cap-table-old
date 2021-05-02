@@ -30,7 +30,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       console.debug("ERC1820 target address funded");
       const tx2 = await hre.ethers.provider.sendTransaction(RAW_ERC1820_TX);
       await tx2.wait();
-      console.debug("ERC1820 deployed");
+      console.debug("ERC1820 deployed", ERC820_ADDRESS);
       const code2 = await hre.ethers.provider.getCode(ERC820_ADDRESS);
       console.log("ERC1820 contract has code length of: ", code2.length);
     } else {
@@ -66,7 +66,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   //   capTableRegistryDeploy.address
   // );
   // const tx2 = await  capTableRegistry.setCon
-  console.log("CapTable que and registry deployed");
+  console.log("CapTableQue deployed", capTableQue.address);
+  console.log("CapTableRegistry deployed", capTableRegistryDeploy.address);
 };
 export default func;
 

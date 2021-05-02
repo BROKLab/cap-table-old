@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { BatchIssue } from '../components/CapTable/BatchIssue';
 import { CapTableCreate } from '../components/CapTable/CapTableCreate';
 import { Loading } from '../components/ui/Loading';
-import { ERC1400Context, SignerContext, SymfoniContext } from '../hardhat/ForvaltContext';
+import { ERC1400Context, SymfoniContext } from '../hardhat/ForvaltContext';
 import { Transaction } from '../utils/ethers-helpers';
 
 interface Props {
@@ -35,6 +35,7 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
 
     const handleCapTableTransactions = async (capTableAddress: string, txs: Transaction[]) => {
         setcapTableAddress(capTableAddress)
+        capTable.connect(capTableAddress)
         handleTransactions(txs, STEP.SELECT_COMPANY)
     }
     const handleTransactions = async (txs: Transaction[], step: STEP) => {
@@ -70,7 +71,7 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
         <Box gap="small" >
             <Heading>Opprett aksjeeierbok</Heading>
             {!signer &&
-                <Box><Text>Du må tilkoble en signer</Text></Box>
+                <Box><Text>Du må koble til med en signer</Text></Box>
             }
             <Accordion justify="start" activeIndex={step} gap="small">
                 <AccordionPanel label="1. Velg selskap" onClickCapture={() => setStep(STEP.SELECT_COMPANY)}>
@@ -81,7 +82,7 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
                 <AccordionPanel label="2. Utsted aksjer" onClickCapture={() => setStep(STEP.ISSUE_SHARES)}>
                     <Box pad="medium">
                         {capTable.instance && capTableAddress !== ethers.constants.AddressZero
-                            ? <BatchIssue transactions={(txs) => handleTransactions(txs, STEP.ISSUE_SHARES)} capTable={capTable.instance.attach(capTableAddress)}></BatchIssue>
+                            ? <BatchIssue transactions={(txs) => handleTransactions(txs, STEP.ISSUE_SHARES)} capTable={capTable.instance}></BatchIssue>
                             : <Paragraph fill>Vennligst velg en aksjeeierbok</Paragraph>
                         }
                     </Box>

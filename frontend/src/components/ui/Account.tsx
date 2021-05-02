@@ -1,12 +1,11 @@
 
 
-import { ethers } from 'ethers';
 import { Anchor, Box, Button, DropButton, Grid, Image, Paragraph, Select, Text } from 'grommet';
 import { User } from 'grommet-icons';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { SymfoniContext } from '../../hardhat/ForvaltContext';
 import { AuthContext } from '../../utils/AuthContext';
-import { CurrentAddressContext, SymfoniContext } from '../../hardhat/ForvaltContext';
 import { Modal } from './Modal';
 
 interface Props { }
@@ -43,6 +42,7 @@ export const Account: React.FC<Props> = () => {
                             <Text size="small">Ikke tilkoblet</Text>
                         }
                     </Box>
+                    <Button label="Signer" onClick={() => init({ forceSigner: true })}></Button>
                 </Box>
             }
             {

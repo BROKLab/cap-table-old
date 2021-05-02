@@ -1,18 +1,18 @@
 import { Box, Heading } from 'grommet';
-
 import React, { useContext } from 'react';
-import { SignerContext } from '../../hardhat/ForvaltContext';
+import { SymfoniContext } from '../../hardhat/ForvaltContext';
 import { ERC1400 } from '../../hardhat/typechain/ERC1400';
 import { Actions } from './Actions';
 import { Balances } from './Balances';
 import { Info } from './Info';
+
 
 interface Props {
     capTable: ERC1400
 }
 
 export const Details: React.FC<Props> = ({ ...props }) => {
-    const [signer] = useContext(SignerContext)
+    const { signer } = useContext(SymfoniContext)
     return (
         <Box>
             <Heading level={3}>Nøkkelopplysninger</Heading>

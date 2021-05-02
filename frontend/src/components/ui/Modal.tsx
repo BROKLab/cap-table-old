@@ -16,7 +16,7 @@ export const Modal: React.FC<Props> = ({ ...props }) => {
             modal
             position="center"
         >
-            <Box margin="medium" align="center" gap="small" >
+            <Box margin="medium" align="center" gap="small" width="full">
                 {props.children}
                 <Box width="full">
                     <Button size="small" label="Lukk" onClick={() => props.setShow(false)} />
