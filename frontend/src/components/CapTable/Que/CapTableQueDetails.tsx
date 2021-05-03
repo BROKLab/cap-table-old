@@ -3,7 +3,8 @@ import { Box, Button, Grid, Heading, Text } from 'grommet';
 import React, { useEffect, useState } from 'react';
 import { CapTableQue } from '../../../hardhat/typechain/CapTableQue';
 import { getStatus } from '../../../utils/que-helpers';
-import { ProcessQue } from '../../Que/ProcessQue';
+import { QueAdmin } from '../../Que/QueAdmin';
+import { QueSelfApprove } from '../../Que/QueSelfApprove';
 import { Modal } from '../../ui/Modal';
 
 interface Props {
@@ -19,7 +20,8 @@ interface QueInfo {
 
 export const CapTableQueDetails: React.FC<Props> = ({ ...props }) => {
     const [info, setInfo] = useState<QueInfo>();
-    const [showQueProcess, setShowQueProcess] = useState(false);
+    const [showQueAdmin, setShowQueAdmin] = useState(false);
+    const [showQueSelfApprove, setShowQueSelfApprove] = useState(false);
 
     useEffect(() => {
         let subscribed = true
@@ -55,15 +57,18 @@ export const CapTableQueDetails: React.FC<Props> = ({ ...props }) => {
                     </Grid>
                 }
                 {info &&
-                    <Grid responsive={true} columns={["small", "flex", "flex"]}>
+                    <Grid responsive={true} columns={["small", "small", "small"]} gap="small">
                         <Text></Text>
-                        <Button label="Kø admin" size="small" onClick={() => setShowQueProcess(!showQueProcess)}></Button>
-
+                        <Button label="Kø admin" size="small" onClick={() => setShowQueAdmin(!showQueAdmin)}></Button>
+                        <Button label="Fremskynd godkjenning" size="small" onClick={() => setShowQueSelfApprove(!showQueSelfApprove)}></Button>
                     </Grid>
                 }
             </Box>
-            <Modal show={showQueProcess} setShow={setShowQueProcess} >
-                <ProcessQue capTableQue={props.capTableQue} capTableAddress={props.capTableAddress}></ProcessQue>
+            <Modal show={showQueAdmin} setShow={setShowQueAdmin} >
+                <QueAdmin capTableQue={props.capTableQue} capTableAddress={props.capTableAddress}></QueAdmin>
+            </Modal>
+            <Modal show={showQueSelfApprove} setShow={setShowQueSelfApprove} >
+                <QueSelfApprove capTableQue={props.capTableQue} capTableAddress={props.capTableAddress}></QueSelfApprove>
             </Modal>
         </Box>
     )

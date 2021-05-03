@@ -10,7 +10,7 @@ interface Props {
     capTableAddress: string,
 }
 
-export const ProcessQue: React.FC<Props> = ({ ...props }) => {
+export const QueAdmin: React.FC<Props> = ({ ...props }) => {
     const [isAdmin, setIsAdmin] = useState(false);
     const { address: currentAddress } = useContext(SymfoniContext)
     const { init } = useContext(SymfoniContext)
