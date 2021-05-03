@@ -5,12 +5,12 @@ import { CapTableRegistry__factory } from "../typechain/factories/CapTableRegist
 export function getCapTableRegistry(
   provider: providers.Provider,
   chainId: number,
-  connect: (address: string) => void,
   signer?: Signer,
   address?: string
 ): SymfoniCapTableRegistry {
   const addresses: { [chainId: number]: string } = {
     31337: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    2018: "0x7904564de273FB207d6D3525620eCa390E93bE1B",
   };
   if (address) {
     addresses[chainId] = address;
@@ -25,6 +25,11 @@ export function getCapTableRegistry(
   };
   const factory = () => {
     return signer ? new CapTableRegistry__factory(signer) : undefined;
+  };
+  const connect = (address: string) => {
+    return signer
+      ? CapTableRegistry__factory.connect(address, signer)
+      : CapTableRegistry__factory.connect(address, provider);
   };
   return {
     instance: instance(),

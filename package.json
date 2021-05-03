@@ -37,5 +37,8 @@
   "bugs": {
     "url": "https://github.com/symfoni/hardhat-react-boilerplate/issues"
   },
-  "homepage": "https://github.com/symfoni/hardhat-react-boilerplate#readme"
+  "homepage": "https://github.com/symfoni/hardhat-react-boilerplate#readme",
+  "dependencies": {
+    "react-qrcodes": "^1.0.7"
+  }
 }

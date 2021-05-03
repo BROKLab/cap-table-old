@@ -39,14 +39,13 @@ const config: HardhatUserConfig = {
     fallbackProvider: "hardhat",
   },
   networks: {
-    // brreg: {
-    //   url:
-    //     "https://e0cteq8qnh:IY2scS2ywMZkinR5m4sS7GBs7EDgm4Mh9F1uUVkmKFI@e0qchlost7-e0zi3w4q2r-rpc.de0-aws.kaleido.io",
-    //   providerType: "JsonRpcProvider",
-    //   accounts: {
-    //     mnemonic: "test test test test test test test test test test test junk",
-    //   },
-    // },
+    besuDev: {
+      url: "http://localhost:8545",
+      providerType: "JsonRpcProvider",
+      accounts: [
+        "0xad6f29b5b5285c8137787710ebdcc5ee16a3f09598a798bee470e158ade704fc",
+      ],
+    },
   },
   solidity: {
     compilers: [

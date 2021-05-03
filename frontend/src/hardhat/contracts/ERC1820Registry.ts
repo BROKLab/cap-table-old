@@ -5,11 +5,13 @@ import { ERC1820Registry__factory } from "../typechain/factories/ERC1820Registry
 export function getERC1820Registry(
   provider: providers.Provider,
   chainId: number,
-  connect: (address: string) => void,
   signer?: Signer,
   address?: string
 ): SymfoniERC1820Registry {
-  const addresses: { [chainId: number]: string } = {};
+  const addresses: { [chainId: number]: string } = {
+    31337: "0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24",
+    2018: "0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24",
+  };
   if (address) {
     addresses[chainId] = address;
   }
@@ -23,6 +25,11 @@ export function getERC1820Registry(
   };
   const factory = () => {
     return signer ? new ERC1820Registry__factory(signer) : undefined;
+  };
+  const connect = (address: string) => {
+    return signer
+      ? ERC1820Registry__factory.connect(address, signer)
+      : ERC1820Registry__factory.connect(address, provider);
   };
   return {
     instance: instance(),

@@ -5,7 +5,6 @@ import { AuthProvider__factory } from "../typechain/factories/AuthProvider__fact
 export function getAuthProvider(
   provider: providers.Provider,
   chainId: number,
-  connect: (address: string) => void,
   signer?: Signer,
   address?: string
 ): SymfoniAuthProvider {
@@ -23,6 +22,11 @@ export function getAuthProvider(
   };
   const factory = () => {
     return signer ? new AuthProvider__factory(signer) : undefined;
+  };
+  const connect = (address: string) => {
+    return signer
+      ? AuthProvider__factory.connect(address, signer)
+      : AuthProvider__factory.connect(address, provider);
   };
   return {
     instance: instance(),

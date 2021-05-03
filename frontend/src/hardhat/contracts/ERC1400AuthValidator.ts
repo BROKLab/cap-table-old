@@ -5,7 +5,6 @@ import { ERC1400AuthValidator__factory } from "../typechain/factories/ERC1400Aut
 export function getERC1400AuthValidator(
   provider: providers.Provider,
   chainId: number,
-  connect: (address: string) => void,
   signer?: Signer,
   address?: string
 ): SymfoniERC1400AuthValidator {
@@ -23,6 +22,11 @@ export function getERC1400AuthValidator(
   };
   const factory = () => {
     return signer ? new ERC1400AuthValidator__factory(signer) : undefined;
+  };
+  const connect = (address: string) => {
+    return signer
+      ? ERC1400AuthValidator__factory.connect(address, signer)
+      : ERC1400AuthValidator__factory.connect(address, provider);
   };
   return {
     instance: instance(),

@@ -1,12 +1,13 @@
 import { ethers } from 'ethers';
 import { Accordion, AccordionPanel, Box, Button, Heading, Paragraph, Text } from 'grommet';
 import { Checkmark } from 'grommet-icons';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BatchIssue } from '../components/CapTable/BatchIssue';
 import { CapTableCreate } from '../components/CapTable/CapTableCreate';
 import { Loading } from '../components/ui/Loading';
 import { ERC1400Context, SymfoniContext } from '../hardhat/ForvaltContext';
+import { ERC1400 } from '../hardhat/typechain/ERC1400';
 import { Transaction } from '../utils/ethers-helpers';
 
 interface Props {
@@ -27,24 +28,27 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
         2: []
     });
     const totalTransactions = Object.values(transactions).flat(1).length
-    const [capTableAddress, setcapTableAddress] = useState(ethers.constants.AddressZero);
-    const capTable = useContext(ERC1400Context)
+    const [capTableAddress, setCapTableAddress] = useState(ethers.constants.AddressZero);
+    const erc1400 = useContext(ERC1400Context)
+    const [capTable, setCapTable] = useState<ERC1400>();
     const [deploying, setDeploying] = useState(false);
 
     const history = useHistory()
 
     const handleCapTableTransactions = async (capTableAddress: string, txs: Transaction[]) => {
-        setcapTableAddress(capTableAddress)
-        capTable.connect(capTableAddress)
+        setCapTableAddress(capTableAddress)
+        setCapTable(erc1400.connect(capTableAddress))
         handleTransactions(txs, STEP.SELECT_COMPANY)
     }
     const handleTransactions = async (txs: Transaction[], step: STEP) => {
-        if (!signer) {
-            return init({ forceSigner: true })
-        }
         setStep(step + 1)
         setTransactions(old => ({ ...old, [step]: [...txs] }))
     }
+    useEffect(() => {
+        if (!signer) {
+            init({ forceSigner: true })
+        }
+    }, [])
 
     const deploy = async () => {
         if (!signer) return init({ forceSigner: true })
@@ -81,8 +85,8 @@ export const CapTableCreatePage: React.FC<Props> = ({ ...props }) => {
                 </AccordionPanel>
                 <AccordionPanel label="2. Utsted aksjer" onClickCapture={() => setStep(STEP.ISSUE_SHARES)}>
                     <Box pad="medium">
-                        {capTable.instance && capTableAddress !== ethers.constants.AddressZero
-                            ? <BatchIssue transactions={(txs) => handleTransactions(txs, STEP.ISSUE_SHARES)} capTable={capTable.instance}></BatchIssue>
+                        {capTable
+                            ? <BatchIssue transactions={(txs) => handleTransactions(txs, STEP.ISSUE_SHARES)} capTable={capTable}></BatchIssue>
                             : <Paragraph fill>Vennligst velg en aksjeeierbok</Paragraph>
                         }
                     </Box>

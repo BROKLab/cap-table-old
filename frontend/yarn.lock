@@ -1909,10 +1909,10 @@
     "@svgr/plugin-svgo" "^4.3.1"
     loader-utils "^1.2.3"
 
-"@symfoni/walletconnect-v2-ethers-signer@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@symfoni/walletconnect-v2-ethers-signer/-/walletconnect-v2-ethers-signer-0.0.12.tgz#e83f5c7a2166e36bc2aa6041fddf669dbbad98c4"
-  integrity sha512-B7KewIi7lanb0wyRwhHPLIJbLWW3L/XdebAMxc71c4Jn4aVUOPj1pJIWQG2L+rtSC4nv6MCMvNJeF6Hc+lxNUg==
+"@symfoni/walletconnect-v2-ethers-signer@^0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@symfoni/walletconnect-v2-ethers-signer/-/walletconnect-v2-ethers-signer-0.0.17.tgz#d68da98585b3d6e12948b74cdd1cfbbda5e1ca2f"
+  integrity sha512-dvbe4tK9ErBCRyzJxtJKWRkNmUv2TdHmOEBrOwYR8Dm6k+KuNIZsfzJ9coYSX3GlRLZoTlj7+CVUQesRC7IDKQ==
   dependencies:
     "@walletconnect/client" "^2.0.0-alpha.42"
     "@walletconnect/types" "^2.0.0-alpha.42"
