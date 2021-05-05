@@ -3,7 +3,7 @@
 /* eslint-disable */
 import { SIGNER_EVENTS, WalletConnectSigner } from "@symfoni/walletconnect-v2-ethers-signer";
 import copy from "clipboard-copy";
-import { ethers, providers, Signer } from "ethers";
+import { ethers, providers, Signer as EthersSigner } from "ethers";
 import { Box, Button, Grid, Image, Text, TextInput } from "grommet";
 import { Copy } from "grommet-icons";
 import React, { useCallback, useEffect, useState } from "react";
@@ -84,6 +84,7 @@ export interface InitOpts {
     forceSigner?: boolean
 }
 
+type Signer = EthersSigner | WalletConnectSigner
 export enum STATE {
     DEFAULT,
     INITIALIZING,
@@ -166,7 +167,9 @@ export const Symfoni: React.FC<SymfoniProps> = ({
             if (signer) {
                 return resolve(signer)
             }
-            const _signer = new WalletConnectSigner().connect(_provider);
+            const _signer = new WalletConnectSigner({
+                methods: ['eth_sendTransaction', 'personal_sign', 'eth_signTypedData', 'eth_signTransaction', 'oracle_data']
+            }).connect(_provider);
 
             if (forceSigner) {
                 _signer.on(SIGNER_EVENTS.uri, (uri: any) => {
