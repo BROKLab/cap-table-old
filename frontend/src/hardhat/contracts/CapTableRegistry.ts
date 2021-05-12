@@ -11,6 +11,7 @@ export function getCapTableRegistry(
   const addresses: { [chainId: number]: string } = {
     31337: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
     2018: "0x7904564de273FB207d6D3525620eCa390E93bE1B",
+    7766: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
   };
   if (address) {
     addresses[chainId] = address;

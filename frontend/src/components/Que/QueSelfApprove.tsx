@@ -11,10 +11,7 @@ interface Props {
 }
 
 export const QueSelfApprove: React.FC<Props> = ({ ...props }) => {
-    const { address: currentAddress } = useContext(SymfoniContext)
     const { init, signer } = useContext(SymfoniContext)
-    const [reason, setReason] = useState("");
-    // TODO useContext(SymfoniContext)
 
 
     const handleSelfApproval = async () => {
@@ -22,7 +19,10 @@ export const QueSelfApprove: React.FC<Props> = ({ ...props }) => {
             return init({ forceSigner: true })
         }
         if ("request" in signer) {
-            const test = await signer.request("oracle_data", [2])
+            const test = await signer.request("oracle_data", [{
+                method: "approve_captable",
+                capTableAddress: props.capTableAddress
+            }])
             console.log("Test", test)
         }
 

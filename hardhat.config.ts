@@ -46,6 +46,13 @@ const config: HardhatUserConfig = {
         "0xad6f29b5b5285c8137787710ebdcc5ee16a3f09598a798bee470e158ade704fc",
       ],
     },
+    brok: {
+      url:
+        "https://e0ri5j5fp2:pA0jrXjkbgdltvu2iaXE7q9NjQy57S1AIF-v0FXyuJ4@e0mvr9jrs7-e0iwsftiw5-rpc.de0-aws.kaleido.io/",
+      accounts: {
+        mnemonic: "test test test test test test test test test test test junk",
+      },
+    },
   },
   solidity: {
     compilers: [

@@ -8,7 +8,9 @@ export function getAuthProvider(
   signer?: Signer,
   address?: string
 ): SymfoniAuthProvider {
-  const addresses: { [chainId: number]: string } = {};
+  const addresses: { [chainId: number]: string } = {
+    7766: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+  };
   if (address) {
     addresses[chainId] = address;
   }

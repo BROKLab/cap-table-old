@@ -149,7 +149,9 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         }
         if (selectedProvider === "walletConnectV2") {
             return new ethers.providers.JsonRpcProvider({
-                url: "http://127.0.0.1:8545",
+                url: "https://e0mvr9jrs7-e0iwsftiw5-rpc.de0-aws.kaleido.io/",
+                user: "e0ri5j5fp2",
+                password: "pA0jrXjkbgdltvu2iaXE7q9NjQy57S1AIF-v0FXyuJ4"
             });
         }
         if (selectedProvider === "hardhat") {

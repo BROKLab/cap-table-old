@@ -34,17 +34,12 @@ export const AccountPage: React.FC<Props> = ({ ...props }) => {
 
     const checkWallet = async () => {
         if ("ethereum" in window) {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            if (accounts.length > 0) {
-                setHasAccount(true)
-            }
+
         }
     }
     const checkChainId = async () => {
         if ("ethereum" in window) {
-            if (parseInt(window.ethereum.chainId, 16) === 55577) {
-                setHasChainId(true)
-            }
+
         }
     }
 
